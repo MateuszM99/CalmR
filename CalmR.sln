@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalmR", "CalmR\CalmR.csproj", "{E2AF3A3F-1D5A-4FD0-AE26-0FF5FBB34AD1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9B43051F-7A8A-4F10-9818-6B7314E92180}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E1211361-8A2B-48FB-A93C-6D4B362F876E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{C511F81B-FC3C-4C51-9479-7B0921F0DADB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{FE32F5A4-2DC9-469B-9916-DB4C7ED7D42D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApi", "WebApi", "{F6D43B9E-0878-4AC6-8B4F-03944EAAB50A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E2AF3A3F-1D5A-4FD0-AE26-0FF5FBB34AD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2AF3A3F-1D5A-4FD0-AE26-0FF5FBB34AD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2AF3A3F-1D5A-4FD0-AE26-0FF5FBB34AD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2AF3A3F-1D5A-4FD0-AE26-0FF5FBB34AD1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C511F81B-FC3C-4C51-9479-7B0921F0DADB} = {9B43051F-7A8A-4F10-9818-6B7314E92180}
+		{FE32F5A4-2DC9-469B-9916-DB4C7ED7D42D} = {9B43051F-7A8A-4F10-9818-6B7314E92180}
+		{F6D43B9E-0878-4AC6-8B4F-03944EAAB50A} = {9B43051F-7A8A-4F10-9818-6B7314E92180}
+		{E2AF3A3F-1D5A-4FD0-AE26-0FF5FBB34AD1} = {F6D43B9E-0878-4AC6-8B4F-03944EAAB50A}
+	EndGlobalSection
+EndGlobal
