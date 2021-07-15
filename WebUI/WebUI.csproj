@@ -7,17 +7,11 @@
         <IsPackable>false</IsPackable>
         <SpaRoot>ClientApp\</SpaRoot>
         <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+        <RootNamespace>CalmR</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.6" />
-        <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="5.0.6" />
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.6" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.6" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.6" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.6" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.6" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.6" />
+        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.8" />
     </ItemGroup>
 
     <ItemGroup>
@@ -33,6 +27,18 @@
       <_ContentIncludedByDefault Remove="Pages\Error.cshtml" />
       <_ContentIncludedByDefault Remove="Pages\Shared\_LoginPartial.cshtml" />
       <_ContentIncludedByDefault Remove="Pages\_ViewImports.cshtml" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="ClientApp\src\assets" />
+      <Folder Include="ClientApp\src\helpers" />
+      <Folder Include="ClientApp\src\hooks" />
+      <Folder Include="ClientApp\src\interfaces" />
+      <Folder Include="ClientApp\src\pages" />
+      <Folder Include="ClientApp\src\services\auth" />
+      <Folder Include="ClientApp\src\validations" />
     </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
