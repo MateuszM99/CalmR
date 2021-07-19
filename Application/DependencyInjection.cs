@@ -4,6 +4,7 @@ using Mapster;
 using MapsterMapper;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace Application
 {
@@ -18,6 +19,7 @@ namespace Application
             services.AddScoped<IMapper, ServiceMapper>();
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddLogging();
             return services;
         }
     }
