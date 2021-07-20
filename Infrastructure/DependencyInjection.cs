@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Identity;
+using Infrastructure.Identity.Services;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -17,14 +18,41 @@ namespace Infrastructure
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
             
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddDefaultTokenProviders()
+                .AddUserManager<UserManager<ApplicationUser>>()
+                .AddSignInManager<SignInManager<ApplicationUser>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            
+            services.Configure<IdentityOptions>(
+                options =>
+                {
+                    options.SignIn.RequireConfirmedEmail = true;
+                    options.User.RequireUniqueEmail = true;
+                    options.User.AllowedUserNameCharacters =
+                        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
 
-            services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+                    // Identity : Default password settings
+                    options.Password.RequireDigit = true;
+                    options.Password.RequireLowercase = true;
+                    options.Password.RequireNonAlphanumeric = true;
+                    options.Password.RequireUppercase = true;
+                    options.Password.RequiredLength = 6;
+                    options.Password.RequiredUniqueChars = 1;
+                });
 
-            services.AddAuthentication()
-                .AddIdentityServerJwt();
+            // services required using Identity
+            services.AddScoped<ITokenService, TokenService>();
+            
+            
+            // services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            //     .AddEntityFrameworkStores<ApplicationDbContext>();
+            //
+            // services.AddIdentityServer()
+            //     .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+            //
+            // services.AddAuthentication()
+            //     .AddIdentityServerJwt();
             
             return services;
         }

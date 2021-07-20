@@ -1,4 +1,7 @@
+using System;
+using System.Reflection;
 using Application;
+using CalmR.Models.Authenticate.Command;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +11,10 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure;
+using Infrastructure.Extensions;
+using Infrastructure.Identity.Authentication;
 using Infrastructure.Persistence;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,8 +33,11 @@ namespace CalmR
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<Token>(Configuration.GetSection("token"));
             services.AddApplication();
             services.AddInfrastructure(Configuration);
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+            //services.AddScoped<IRequestHandler<SignInCommand, CommandResponse>, CommandHandler>();
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -44,6 +53,8 @@ namespace CalmR
             {
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
+                app.EnsureIdentityDbIsCreated();
+                app.SeedIdentityDataAsync().Wait();
             }
             else
             {
@@ -59,7 +70,6 @@ namespace CalmR
             app.UseRouting();
 
             app.UseAuthentication();
-            app.UseIdentityServer();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {

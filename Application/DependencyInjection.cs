@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Application.Common.Behaviours;
 using FluentValidation;
 using Mapster;
 using MapsterMapper;
@@ -19,6 +20,8 @@ namespace Application
             services.AddScoped<IMapper, ServiceMapper>();
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             services.AddLogging();
             return services;
         }
