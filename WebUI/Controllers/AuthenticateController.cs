@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
-using CalmR.Models.Authenticate.Command;
+﻿using System;
+using System.Threading.Tasks;
+using CalmR.Models.Authenticate.Commands;
+using CalmR.Models.Authenticate.Commands.SignIn;
 using Infrastructure.Identity;
 using Infrastructure.Identity.Authentication;
 using MediatR;
@@ -16,8 +18,15 @@ namespace CalmR.Controllers
         [HttpPost("signIn")]
         public async Task<TokenResponse> SignInAsync([FromBody]SignInCommand command)
         {
-            var response = await Mediator.Send(command);
-            return response.Resource;
+            try
+            {
+                var response = await Mediator.Send(command);
+                return response.Resource;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
         
         [HttpPost]

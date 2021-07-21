@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace CalmR.Models.Authenticate.Command
+namespace CalmR.Models.Authenticate.Commands.SignIn
 {
     public class SignInCommandValidator : AbstractValidator<SignInCommand>
     {

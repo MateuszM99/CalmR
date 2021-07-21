@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 using Application;
-using CalmR.Models.Authenticate.Command;
+using CalmR.Filters;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -39,7 +39,11 @@ namespace CalmR
             services.AddMediatR(Assembly.GetExecutingAssembly());
             //services.AddScoped<IRequestHandler<SignInCommand, CommandResponse>, CommandHandler>();
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddControllersWithViews();
+            services.AddControllers(options =>
+            {
+                options.Filters.AddService<HandleExceptionsFilter>();
+
+            });
             services.AddRazorPages();
 
             // In production, the React files will be served from this directory

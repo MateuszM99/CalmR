@@ -6,7 +6,7 @@ using Infrastructure.Identity.Services;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
-namespace CalmR.Models.Authenticate.Command
+namespace CalmR.Models.Authenticate.Commands.SignIn
 {
     public class SignInCommand : TokenRequest, IRequest<CommandResponse>
     {
