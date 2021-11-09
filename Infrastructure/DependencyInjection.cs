@@ -42,7 +42,7 @@ namespace Infrastructure
                 });
 
             // services required using Identity
-            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAuthenticateService, AuthenticateService>();
             
             
             // services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)

@@ -41,9 +41,18 @@ namespace CalmR
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddControllers(options =>
             {
-                options.Filters.AddService<HandleExceptionsFilter>();
+                options.Filters.Add(typeof(HandleExceptionsFilter));
 
             });
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder => 
+                    builder.WithOrigins("http://localhost:3000","http://localhost:5001","http://localhost:5000")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+            });
+            
             services.AddRazorPages();
 
             // In production, the React files will be served from this directory
@@ -72,6 +81,7 @@ namespace CalmR
             app.UseSpaStaticFiles();
 
             app.UseRouting();
+            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();

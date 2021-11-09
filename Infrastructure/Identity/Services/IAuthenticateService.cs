@@ -3,8 +3,8 @@ using Infrastructure.Identity.Authentication;
 
 namespace Infrastructure.Identity.Services
 {
-    public interface ITokenService
+    public interface IAuthenticateService
     {
-        Task<TokenResponse> Authenticate(TokenRequest request, string ipAddress);
+        Task<AuthenticateResponse> Authenticate(AuthenticateRequest request, string ipAddress);
     }
 }

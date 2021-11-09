@@ -16,17 +16,10 @@ namespace CalmR.Controllers
     public class AuthenticateController : ApiControllerBase
     {
         [HttpPost("signIn")]
-        public async Task<TokenResponse> SignInAsync([FromBody]SignInCommand command)
+        public async Task<AuthenticateResponse> SignInAsync([FromBody]SignInCommand command)
         {
-            try
-            {
-                var response = await Mediator.Send(command);
-                return response.Resource;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            var response = await Mediator.Send(command);
+            return response.Resource;
         }
         
         [HttpPost]

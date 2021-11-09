@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CalmR.Filters;
 using Infrastructure.Identity.Authentication;
 using Infrastructure.Identity.Services;
 using MediatR;
@@ -8,23 +9,23 @@ using Microsoft.AspNetCore.Http;
 
 namespace CalmR.Models.Authenticate.Commands.SignIn
 {
-    public class SignInCommand : TokenRequest, IRequest<CommandResponse>
+    public class SignInCommand : AuthenticateRequest, IRequest<CommandResponse>
     {
     }
     public class CommandResponse
     {
-        public TokenResponse Resource { get; set; }
+        public AuthenticateResponse Resource { get; set; }
     }
     
     public class CommandHandler : IRequestHandler<SignInCommand, CommandResponse>
     {
-        private readonly ITokenService _tokenService;
+        private readonly IAuthenticateService _authenticateService;
         private readonly HttpContext _httpContext;
 
-        public CommandHandler(ITokenService tokenService,
+        public CommandHandler(IAuthenticateService authenticateService,
             IHttpContextAccessor httpContextAccessor)
         {
-            this._tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
+            this._authenticateService = authenticateService ?? throw new ArgumentNullException(nameof(authenticateService));
             this._httpContext = (httpContextAccessor != null) ? httpContextAccessor.HttpContext : throw new ArgumentNullException(nameof(httpContextAccessor));
 
         }
@@ -35,13 +36,13 @@ namespace CalmR.Models.Authenticate.Commands.SignIn
 
             string ipAddress = _httpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
 
-            TokenResponse tokenResponse = await _tokenService.Authenticate(command, ipAddress);
-            if (tokenResponse == null)
+            AuthenticateResponse authenticateResponse = await _authenticateService.Authenticate(command, ipAddress);
+            if (authenticateResponse == null)
             {
-                throw new Exception();
+                throw new ApiException("Blad",StatusCodes.Status401Unauthorized.ToString());
             }
 
-            response.Resource = tokenResponse;
+            response.Resource = authenticateResponse;
             return response;
         }
     }

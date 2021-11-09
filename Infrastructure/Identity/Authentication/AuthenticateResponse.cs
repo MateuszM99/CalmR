@@ -1,8 +1,8 @@
 ﻿namespace Infrastructure.Identity.Authentication
 {
-    public class TokenResponse
+    public class AuthenticateResponse
     {
-        public TokenResponse(ApplicationUser user, 
+        public AuthenticateResponse(ApplicationUser user, 
             string role, 
             string token
         )

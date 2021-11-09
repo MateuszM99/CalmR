@@ -11,14 +11,14 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Identity.Services
 {
-    public class TokenService : ITokenService
+    public class AuthenticateService : IAuthenticateService
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly Token _token;
         private readonly HttpContext _httpContext;
         
-        public TokenService(
+        public AuthenticateService(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IOptions<Token> tokenOptions,
@@ -31,7 +31,7 @@ namespace Infrastructure.Identity.Services
         }
     
 
-        public async Task<TokenResponse> Authenticate(TokenRequest request, string ipAddress)
+        public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest request, string ipAddress)
         {
             if (await IsValidUser(request.Username, request.Password))
             {
@@ -44,7 +44,7 @@ namespace Infrastructure.Identity.Services
 
                     await _userManager.UpdateAsync(user);
 
-                    return new TokenResponse(user,
+                    return new AuthenticateResponse(user,
                                              role,
                                              jwtToken
                                              //""//refreshToken.Token

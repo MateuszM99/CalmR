@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Infrastructure.Identity.Authentication
 {
-    public class TokenRequest
+    public class AuthenticateRequest
     {
         [Required]
         [JsonProperty("username")]
