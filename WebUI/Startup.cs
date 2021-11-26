@@ -1,7 +1,10 @@
 using System;
 using System.Reflection;
 using Application;
+using Application.Common.Interfaces;
+using Application.Psychologists.Queries;
 using CalmR.Filters;
+using CalmR.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,8 +39,8 @@ namespace CalmR
             services.Configure<Token>(Configuration.GetSection("token"));
             services.AddApplication();
             services.AddInfrastructure(Configuration);
+            services.AddSingleton<ICurrentUserService, CurrentUserService>();
             services.AddMediatR(Assembly.GetExecutingAssembly());
-            //services.AddScoped<IRequestHandler<SignInCommand, CommandResponse>, CommandHandler>();
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddControllers(options =>
             {
@@ -52,6 +55,8 @@ namespace CalmR
                         .AllowAnyHeader()
                         .AllowCredentials());
             });
+            
+            
             
             services.AddRazorPages();
 

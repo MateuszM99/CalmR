@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
+using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Identity.Seed
 {
     public class ApplicationDbContextDataSeed
     {
-        public static async Task SeedAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task SeedAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             // Add roles supported
             await roleManager.CreateAsync(new IdentityRole("Administrator"));
@@ -13,12 +14,10 @@ namespace Infrastructure.Identity.Seed
 
             // New admin user
             string adminUserName = "mateusz@test.com";
-            var adminUser = new ApplicationUser { 
+            var adminUser = new User { 
                 UserName = adminUserName,
                 Email = adminUserName,
                 EmailConfirmed = true,
-                FirstName = "Mateusz",
-                LastName = "Administrator"
             };
             
             // Add new user and their role

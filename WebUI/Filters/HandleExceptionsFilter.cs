@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using Application.Common.Exceptions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -7,29 +8,6 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace CalmR.Filters
 {
-    public class ApiException : Exception
-    {
-        public ApiException(string errorCode) :
-            this("An error occurred while processing this request.", errorCode)
-        {
-        }
-
-        public ApiException(string message, string errorCode) : base(message)
-        {
-            ErrorCode = errorCode;
-        }
-
-        public ApiException(string message, Exception? innerException, string errorCode) : base(message,
-            innerException)
-        {
-            ErrorCode = errorCode;
-        }
-
-        public HttpStatusCode StatusCode { get; init; } = HttpStatusCode.BadRequest;
-    
-        public string ErrorCode { get; }
-    }
-
     public class HandleExceptionsFilter : IActionFilter, IOrderedFilter
     {
         private readonly ProblemDetailsFactory _problemDetailsFactory;

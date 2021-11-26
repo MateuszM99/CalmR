@@ -5,12 +5,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Enums" />
       <Folder Include="Exceptions" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
+      <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="5.0.8" />
     </ItemGroup>
 
 </Project>

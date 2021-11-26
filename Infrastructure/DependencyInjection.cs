@@ -1,6 +1,12 @@
-﻿using Infrastructure.Identity;
+﻿using Application.Common.Interfaces;
+using Application.Common.Options;
+using Domain.Entities;
+using Infrastructure.Identity;
 using Infrastructure.Identity.Services;
+using Infrastructure.Identity.TokenProvider;
+using Infrastructure.Interfaces;
 using Infrastructure.Persistence;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,11 +24,14 @@ namespace Infrastructure
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
             
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+            
+            services.AddIdentity<User, IdentityRole>()
                 .AddDefaultTokenProviders()
-                .AddUserManager<UserManager<ApplicationUser>>()
-                .AddSignInManager<SignInManager<ApplicationUser>>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddUserManager<UserManager<User>>()
+                .AddSignInManager<SignInManager<User>>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddTokenProvider<EmailConfirmationTokenProvider>("EmailConfirmationTokenProvider");
             
             services.Configure<IdentityOptions>(
                 options =>
@@ -43,17 +52,12 @@ namespace Infrastructure
 
             // services required using Identity
             services.AddScoped<IAuthenticateService, AuthenticateService>();
-            
-            
-            // services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            //     .AddEntityFrameworkStores<ApplicationDbContext>();
-            //
-            // services.AddIdentityServer()
-            //     .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
-            //
-            // services.AddAuthentication()
-            //     .AddIdentityServerJwt();
-            
+            services.AddScoped<IEmailSender, EmailSender>();
+
+            services.AddOptions();
+            services.Configure<GmailOptions>(configuration);
+            services.Configure<CloudinaryOptions>(configuration);
+
             return services;
         }
     }

@@ -5,10 +5,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Common\Exceptions" />
-      <Folder Include="Common\Mappings" />
+      <Folder Include="Appointments\Commands\UpdateAppointment" />
       <Folder Include="Common\Security" />
-      <Folder Include="Common\ViewModels" />
+      <Folder Include="Psychologists\Commands" />
     </ItemGroup>
 
     <ItemGroup>
@@ -16,13 +15,14 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="10.1.1" />
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
       <PackageReference Include="FluentValidation" Version="10.3.0" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.3.0" />
-      <PackageReference Include="Mapster" Version="7.2.0" />
-      <PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
       <PackageReference Include="MediatR" Version="9.0.0" />
       <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
       <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
+      <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.8" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.8">
         <PrivateAssets>all</PrivateAssets>

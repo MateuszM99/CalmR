@@ -9,14 +9,12 @@ using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Persistence
 {
-    public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, IApplicationDbContext
+    public class ApplicationDbContext : ApiAuthorizationDbContext<User>, IApplicationDbContext
     {
-        public DbSet<Contact> Contacts { get; set; }
-        public DbSet<Conversation> Conversations { get; set; }
-        public DbSet<Message> Messages { get; set; }
-        public DbSet<Participant> Participants { get; set; }
-        public DbSet<UserContact> UserContacts { get; set; }
-        
+        public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<Psychologist> Psychologists { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+
         public ApplicationDbContext(
             DbContextOptions options,
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)

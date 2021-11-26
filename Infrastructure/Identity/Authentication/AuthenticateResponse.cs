@@ -1,8 +1,10 @@
-﻿namespace Infrastructure.Identity.Authentication
+﻿using Domain.Entities;
+
+namespace Infrastructure.Identity.Authentication
 {
     public class AuthenticateResponse
     {
-        public AuthenticateResponse(ApplicationUser user, 
+        public AuthenticateResponse(User user, 
             string role, 
             string token
         )
