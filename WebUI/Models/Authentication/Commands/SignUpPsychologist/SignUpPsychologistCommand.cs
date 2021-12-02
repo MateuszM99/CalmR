@@ -17,11 +17,8 @@ namespace CalmR.Models.Authentication.Commands.SignUpPsychologist
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public Speciality Speciality { get; set; }
         public int CostPerHour { get; set; }
         public string Description { get; set; }
-        
-        public IFormFile ProfileImage { get; set; }
         public string Country { get; set; }
         public string City { get; set; }
         public string Street { get; set; }
@@ -47,11 +44,13 @@ namespace CalmR.Models.Authentication.Commands.SignUpPsychologist
 
         public async Task<SignUpResponse> Handle(SignUpPsychologistCommand request, CancellationToken cancellationToken)
         {
+            const string defaultProfileImageUrl = "https://www.personality-insights.com/wp-content/uploads/2017/12/default-profile-pic-e1513291410505.jpg";
+            
             Psychologist newPsychologist = new Psychologist()
             {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
-                Speciality = request.Speciality,
+                ProfileImageUrl = defaultProfileImageUrl,
                 CostPerHour = request.CostPerHour,
                 Description = request.Description,
                 Address = new Address()
@@ -67,17 +66,14 @@ namespace CalmR.Models.Authentication.Commands.SignUpPsychologist
 
             await _context.Psychologists.AddAsync(newPsychologist, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
-            
-            string profileImageUrl = await _uploadService.UploadPhotoAsync(request.ProfileImage, newPsychologist.Id);
-            newPsychologist.ProfileImageUrl = profileImageUrl;
-            await _context.SaveChangesAsync(cancellationToken);
 
             var signUpRequest = new SignUpRequest()
             {
                 UserName = request.UserName,
                 Email = request.Email,
                 Password = request.Password,
-                ConfirmPassword = request.ConfirmPassword
+                ConfirmPassword = request.ConfirmPassword,
+                PsychologistId = newPsychologist.Id
             };
             
             SignUpResponse signUpResponse = await _authenticateService.SignUp(signUpRequest, RequestHelpers.GetIpAddress(_httpContext), RequestHelpers.GetOrigin(_httpContext));

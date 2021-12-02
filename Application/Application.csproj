@@ -5,8 +5,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Appointments\Commands\UpdateAppointment" />
       <Folder Include="Common\Security" />
+      <Folder Include="Conversations\Commands\DeleteConversationCommand" />
+      <Folder Include="Participants\Commands" />
       <Folder Include="Psychologists\Commands" />
     </ItemGroup>
 
@@ -22,6 +23,7 @@
       <PackageReference Include="MediatR" Version="9.0.0" />
       <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
       <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
+      <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
       <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.8" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.8">

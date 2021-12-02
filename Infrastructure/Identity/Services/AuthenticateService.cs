@@ -44,7 +44,8 @@ namespace Infrastructure.Identity.Services
             User user = new User
             {
                 UserName = request.UserName,
-                Email =  request.Email
+                Email =  request.Email,
+                PsychologistId = request.PsychologistId,
             };
 
             var result = await _userManager.CreateAsync(user, request.Password);

@@ -25,6 +25,12 @@ namespace Application
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             services.AddLogging();
+            services.AddSignalR(opt =>
+                {
+                    opt.EnableDetailedErrors = true;
+                }
+                );
+            
             return services;
         }
     }

@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from "styled-components";
 import Search from '../../../../application/assets/search-solid.svg';
+import { cancelAppointmentRequest, getAppointmentsRequest } from '../../../../infrastructure/services/api/appointments/AppointmentsRequests';
+import ChangeAppointmentDateForm from '../ChangeAppointmentDateForm/ChangeAppointmentDateForm';
 
 const Container = styled.div`
     margin-top: 2rem;
@@ -110,6 +112,41 @@ const InputContainer = styled.span`
 `
 
 function UserAppointments() {
+    const [appointments, setAppointments] = useState(null);
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {     
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const getAppointments = async () => {
+        try{
+            let response = await getAppointmentsRequest();
+            setAppointments(response.data);
+        } catch(err){
+            console.log(err);
+        }
+    }
+
+    const handleAppointmentCancel = async (appointmentId) => {
+        try{
+            let response = await cancelAppointmentRequest({appointmentId});
+            console.log(response.data);
+        } catch(err){
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        if(appointments == null){
+            getAppointments();
+        }
+    },[])
+
     return (
         <Container>
             <SearchBar>
@@ -119,7 +156,8 @@ function UserAppointments() {
                 </div>
             </SearchBar>
             <ListContainer>
-                <ListItem>
+                {appointments?.map(appointment =>
+                    <ListItem>
                     <ListItemContainer>
                         <ListItemRow>
                             <label>Doctor:</label>
@@ -157,10 +195,16 @@ function UserAppointments() {
                     </ListItemRow>
                    </ListItemContainer>
                    <span className="actions">
-                        <a>Make appointment</a>
-                        <a>Send a message</a>
+                        <a onClick={() => handleAppointmentCancel(appointment.id)}>Cancel appointment</a>
+                        <a onClick={handleClickOpen}>Change appointment date</a>
                     </span>
+                    <ChangeAppointmentDateForm
+                    appointmentId = {appointment.id}
+                    open={open}
+                    onClose={handleClose}
+                    />
                 </ListItem>
+                )}               
             </ListContainer>
         </Container>
     )

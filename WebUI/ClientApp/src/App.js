@@ -5,19 +5,21 @@ import { BrowserRouter as Router,
   Link } from 'react-router-dom';
 import axios from 'axios';
 import './custom.css';
-import Navbar from './presentation/components/Navbar/Navbar';
-import Home from './presentation/components/Home/Home';
-import SignInPage from './presentation/pages/SignInPage/SignInPage';
-import SignUpPage from './presentation/pages/SignUpPage/SignUpPage';
-import RequestPasswordResetPage from './presentation/pages/RequestPasswordResetPage/RequestPasswordResetPage';
-import PasswordResetPage from './presentation/pages/PasswordResetPage/PasswordResetPage';
-import ConfirmEmailPage from './presentation/pages/ConfirmEmailPage/ConfirmEmailPage';
-import ResendConfirmEmailPage from './presentation/pages/ResendConfirmEmailPage/ResendConfirmEmailPage';
+import Navbar from './presentation/components/common/Navbar/Navbar';
+import Home from './presentation/components/common/Home/Home';
 import UserHomePage from './presentation/pages/user/UserHomePage/UserHomePage';
 import UserPsychologistPage from './presentation/pages/user/UserPsychologistPage/UserPsychologistPage';
 import UserAppointmentsPage from './presentation/pages/user/UserAppointmentsPage/UserAppointmentsPage';
 import UserMeetingsPage from './presentation/pages/user/UserMeetingsPage/UserMeetingsPage';
 import UserNotesPage from './presentation/pages/user/UserNotesPage/UserNotesPage';
+import ChatPage from './presentation/pages/chat/ChatPage/ChatPage';
+import SignInPage from './presentation/pages/account/SignInPage/SignInPage';
+import SignUpPage from './presentation/pages/account/SignUpPage/SignUpPage';
+import RequestPasswordResetPage from './presentation/pages/account/RequestPasswordResetPage/RequestPasswordResetPage';
+import PasswordResetPage from './presentation/pages/account/PasswordResetPage/PasswordResetPage';
+import ConfirmEmailPage from './presentation/pages/account/ConfirmEmailPage/ConfirmEmailPage';
+import SignUpPsychologistPage from './presentation/pages/account/SignUpPsychologistPage/SignUpPsychologistPage';
+import ResendConfirmEmailPage from './presentation/pages/account/ResendConfirmEmailPage/ResendConfirmEmailPage';
 
 function App() {
 
@@ -39,22 +41,25 @@ function App() {
         <div className="App">
           <Switch>
             <Route path="/signin">
-                <SignInPage></SignInPage>
+                <SignInPage/>
             </Route>
             <Route path="/signup">
-                <SignUpPage></SignUpPage>
+                <SignUpPage/>
+            </Route>
+            <Route path="/signup-psychologist">
+                <SignUpPsychologistPage/>
             </Route>
             <Route path="/account/request-reset">
-              <RequestPasswordResetPage></RequestPasswordResetPage>
+              <RequestPasswordResetPage/>
             </Route>
             <Route path="/account/reset">
-              <PasswordResetPage></PasswordResetPage>
+              <PasswordResetPage/>
             </Route>
             <Route path="/account/confirm">
-              <ConfirmEmailPage></ConfirmEmailPage>
+              <ConfirmEmailPage/>
             </Route>
             <Route path="/account/resend-confirm">
-              <ResendConfirmEmailPage></ResendConfirmEmailPage>
+              <ResendConfirmEmailPage />
             </Route>
             <Route path="/app/home">
                 <UserHomePage></UserHomePage>
@@ -70,6 +75,9 @@ function App() {
             </Route>
             <Route path="/app/notes">
                 <UserNotesPage></UserNotesPage>
+            </Route>
+            <Route path="/app/chat/:conversationId">
+                <ChatPage></ChatPage>
             </Route>
             <Route path="/">
               <Navbar></Navbar>

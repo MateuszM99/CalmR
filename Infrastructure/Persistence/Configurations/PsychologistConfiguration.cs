@@ -14,6 +14,9 @@ namespace Infrastructure.Persistence.Configurations
                 .WithOne(p => p.Psychologist)
                 .HasForeignKey<Address>(a => a.PsychologistId);
 
+            builder.HasOne(u => u.User)
+                .WithOne(p => p.Psychologist)
+                .HasForeignKey<User>(u => u.PsychologistId);
         }
     }
 }

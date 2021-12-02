@@ -5,6 +5,7 @@ namespace Application.Psychologists.Queries
 {
     public class PsychologistDTO
     {
+        public string Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string ProfileImageUrl { get; set; }

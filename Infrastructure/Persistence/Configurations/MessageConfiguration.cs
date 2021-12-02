@@ -14,6 +14,10 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasOne(e => e.Conversation)
                     .WithMany(e => e.Messages)
                     .HasForeignKey(e => e.ConversationId);
+
+            builder.HasOne(m => m.Sender)
+                .WithMany(m => m.Messages)
+                .HasForeignKey(m => m.SenderId);
         }
     }
 }

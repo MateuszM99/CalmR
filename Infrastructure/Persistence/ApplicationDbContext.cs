@@ -14,6 +14,10 @@ namespace Infrastructure.Persistence
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Psychologist> Psychologists { get; set; }
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<Participant> Participants { get; set; }
+
 
         public ApplicationDbContext(
             DbContextOptions options,

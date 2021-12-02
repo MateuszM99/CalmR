@@ -10,6 +10,10 @@ export function signUpRequest(signUpData){
     return axios.post(`${baseUrl}/api/authenticate/signUp`,signUpData);
 }
 
+export function signUpPsychologistRequest(signUpData){
+    return axios.post(`${baseUrl}/api/authenticate/signUp-psychologist`,signUpData);
+}
+
 export function confirmEmailRequest(confirmEmailData){
     console.log(confirmEmailData);
     return axios.post(`${baseUrl}/api/authenticate/confirm`,confirmEmailData)

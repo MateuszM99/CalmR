@@ -6,8 +6,8 @@ namespace Domain.Entities
 {
     public class Appointment : BaseEntity
     {
-        public DateTime AppointmentDate { get; set; }
-        public int AppointmentDurationTime { get; set; }
+        public DateTime StartDate { get; set; }
+        public int DurationTime { get; set; }
         public AppointmentStatus Status { get; set; }
         
         public string PsychologistId { get; set; }

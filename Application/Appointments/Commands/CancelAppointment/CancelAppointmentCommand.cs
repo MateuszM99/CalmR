@@ -36,7 +36,7 @@ namespace Application.Appointments.Commands.CancelAppointment
             
             DateTime now = DateTime.Now;
 
-            if (appointment.AppointmentDate > now.AddDays(-1))
+            if (appointment.StartDate > now.AddDays(-1))
             {
                 appointment.Status = AppointmentStatus.Cancelled;
                 await _context.SaveChangesAsync(cancellationToken);

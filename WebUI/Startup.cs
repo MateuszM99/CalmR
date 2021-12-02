@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using Application;
 using Application.Common.Interfaces;
+using Application.Hubs;
 using Application.Psychologists.Queries;
 using CalmR.Filters;
 using CalmR.Services;
@@ -50,7 +51,7 @@ namespace CalmR
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder => 
-                    builder.WithOrigins("http://localhost:3000","http://localhost:5001","http://localhost:5000")
+                    builder.WithOrigins("http://localhost:3000")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials());
@@ -96,6 +97,7 @@ namespace CalmR
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+                endpoints.MapHub<ChatHub>("/hubs/chat");
             });
 
             app.UseSpa(spa =>

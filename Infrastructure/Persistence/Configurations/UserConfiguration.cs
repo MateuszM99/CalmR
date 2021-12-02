@@ -10,16 +10,16 @@ namespace Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasMany(e => e.Messages)
-                .WithOne()
+                .WithOne(e => e.Sender)
                 .HasForeignKey(e => e.SenderId);
 
-            builder.HasMany(e => e.Conversations)
-                .WithOne()
-                .HasForeignKey(e => e.CreatorId);
-
-            builder.HasMany(e => e.Contacts)
-                .WithOne()
+            builder.HasMany(e => e.Participations)
+                .WithOne(e => e.User)
                 .HasForeignKey(e => e.UserId);
+
+            builder.HasMany(e => e.Conversations)
+                .WithOne(e => e.Creator)
+                .HasForeignKey(e => e.CreatorId);
         }
     }
 }

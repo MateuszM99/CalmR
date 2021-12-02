@@ -47,15 +47,15 @@ namespace Application.Appointments.Commands.CreateAppointment
                                                                         .Where(a => a.PsychologistId == request.PsychologistId)
                                                                         .ToListAsync(cancellationToken);
 
-            if (psychologistAppointments.Any(a => a.AppointmentDate.AddHours(a.AppointmentDurationTime).AddMinutes(15) < request.AppointmentDate))
+            if (psychologistAppointments.Any(a => a.StartDate.AddHours(a.DurationTime) < request.AppointmentDate))
             {
                 throw new ApiException("There is already appointment made for this time",StatusCodes.Status405MethodNotAllowed.ToString());
             }
             
             Appointment newAppointment = new Appointment()
             {
-                AppointmentDate = request.AppointmentDate,
-                AppointmentDurationTime = request.AppointmentDurationTime,
+                StartDate = request.AppointmentDate,
+                DurationTime = request.AppointmentDurationTime,
                 Status = AppointmentStatus.New,
                 PsychologistId = request.PsychologistId,
                 ClientId = user.Id

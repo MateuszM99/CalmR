@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router';
 import styled from "styled-components";
 import MapPin from '../../../../application/assets/map-marker-alt-solid.svg';
 import Money from '../../../../application/assets/money-bill-wave-solid.svg';
 import Search from '../../../../application/assets/search-solid.svg';
+import { Button } from '@mui/material';
+import { createConversationRequest, getUserPsychologistConversationRequest } from '../../../../infrastructure/services/api/conversations/ConversationsRequests';
 import { getPsychologistsListRequest } from '../../../../infrastructure/services/api/psychologists/PsychologistsRequests';
+import AppointmentDialogForm from '../AppointmentForm/AppointmentDialogForm';
 
 const Container = styled.div`
     margin-top: 2rem;
@@ -113,14 +117,45 @@ const ListItem = styled.div`
 
 
 function UserPsychologist() {
-
+    const history = useHistory();
     const [psychologistList, setPsychologistList] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [selectedPsychologistId, setSelectedPsychologistId] = useState(null);
+
+    const handleClickOpen = (psychologistId) => {
+        setSelectedPsychologistId(psychologistId);
+        console.log(psychologistId);
+        setOpen(true);
+    };
+
+    const handleSendMessageClick = async (psychologistId) => {
+        try{
+            let conversationId = null;
+            let response = await getUserPsychologistConversationRequest(psychologistId);
+
+            console.log(response.data);
+            conversationId = response.data?.id;
+
+            if(!response.data){
+                let createResponse = await createConversationRequest({psychologistId: psychologistId});
+                conversationId = createResponse.data;
+            }
+            
+            history.push(`/app/chat/${conversationId}`);
+        } catch(err){
+            
+        } 
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const getPsychologistList = async () => {
         try{
             let response = await getPsychologistsListRequest();
-            console.log(response);
+            console.log(response.data);
             setPsychologistList(response.data);
             setIsLoaded(true);
         } catch(err){
@@ -133,39 +168,46 @@ function UserPsychologist() {
     },[]);
 
     return (
-        <Container>
-            <SearchBar>
-                <input type="text" placeholder="Type to search.."/>
-                <div className="search-icon">
-                    <img src={Search} alt="Search"></img>
-                </div>
-            </SearchBar>
-            <ListContainer>
-                {psychologistList?.map((psychologist => 
-                        <ListItem>
-                        <span>
-                            <img alt="profile" src={psychologist.profileImageUrl}></img>
-                            <h4>{psychologist.firstName} {psychologist.lastName}</h4>
-                            <h7>Psycholog</h7>
-                        </span>
-                        <p>{psychologist.description}</p>
-                        <span className="actions">
-                            <a>Make appointment</a>
-                            <a>Send a message</a>
-                        </span>
-                        <span className="line"></span>
-                        <span>
-                            <img className="icon" src={MapPin} alt="MapPin"/>
-                            <p>{psychologist.country} {psychologist.city} {psychologist.street}, {psychologist.houseNumber} {psychologist.apartmentNumber}</p>
-                        </span>
-                        <span>
-                            <img className="icon" src={Money} alt="Price"/>
-                            <p>{psychologist.costPerHour}</p>
-                        </span>
-                    </ListItem>
-                ))}
-            </ListContainer>
-        </Container>
+        <div>
+            <Container>
+                <SearchBar>
+                    <input type="text" placeholder="Type to search.."/>
+                    <div className="search-icon">
+                        <img src={Search} alt="Search"></img>
+                    </div>
+                </SearchBar>
+                <ListContainer>
+                    {psychologistList?.map((psychologist => 
+                            <ListItem key={psychologist.firstName}> 
+                            <span>
+                                <img alt="profile" src={psychologist.profileImageUrl}></img>
+                                <h4>{psychologist.firstName} {psychologist.lastName}</h4>
+                                <h7>Psycholog</h7>
+                            </span>
+                            <p>{psychologist.description}</p>
+                            <span className="actions">
+                                <Button onClick={() => handleClickOpen(psychologist.id)}>Make appointment</Button>
+                                <Button onClick={() => handleSendMessageClick(psychologist.id)}>Send a message</Button>
+                            </span>
+                            <span className="line"></span>
+                            <span>
+                                <img className="icon" src={MapPin} alt="MapPin"/>
+                                <p>{psychologist.country} {psychologist.city} {psychologist.street}, {psychologist.houseNumber} {psychologist.apartmentNumber}</p>
+                            </span>
+                            <span>
+                                <img className="icon" src={Money} alt="Price"/>
+                                <p>{psychologist.costPerHour}</p>
+                            </span>
+                        </ListItem>
+                    ))}
+                </ListContainer>
+            </Container>
+            <AppointmentDialogForm
+                psychologistId = {selectedPsychologistId}
+                open={open}
+                onClose={handleClose}
+            />
+        </div>
     )
 }
 

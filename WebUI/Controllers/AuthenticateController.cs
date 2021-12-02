@@ -7,6 +7,7 @@ using CalmR.Models.Authentication.Commands.ConfirmEmail;
 using CalmR.Models.Authentication.Commands.RequestPasswordReset;
 using CalmR.Models.Authentication.Commands.ResendConfirmationEmail;
 using CalmR.Models.Authentication.Commands.ResetPassword;
+using CalmR.Models.Authentication.Commands.SignUpPsychologist;
 using Infrastructure.Identity;
 using Infrastructure.Identity.Authentication;
 using MediatR;
@@ -40,11 +41,11 @@ namespace CalmR.Controllers
         
         [Route("signUp-psychologist")]
         [HttpPost]
-        public async Task<SignUpResponse> SignUpPsychologist([FromBody] SignUpCommand command)
+        public async Task<SignUpResponse> SignUpPsychologist([FromBody] SignUpPsychologistCommand command)
         {
             var response = await Mediator.Send(command);
 
-            return response.Resource;
+            return response;
         }
 
         [Route("confirm")]

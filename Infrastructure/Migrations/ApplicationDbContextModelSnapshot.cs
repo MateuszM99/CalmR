@@ -63,17 +63,17 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("AppointmentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("AppointmentDurationTime")
-                        .HasColumnType("int");
-
                     b.Property<string>("ClientId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("DurationTime")
+                        .HasColumnType("int");
+
                     b.Property<string>("PsychologistId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -85,27 +85,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("PsychologistId");
 
                     b.ToTable("Appointments");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Contact", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Contact");
                 });
 
             modelBuilder.Entity("Domain.Entities.Conversation", b =>
@@ -121,6 +100,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("CreatorId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime>("DeletedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
@@ -128,7 +110,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("CreatorId");
 
-                    b.ToTable("Conversation");
+                    b.ToTable("Conversations");
                 });
 
             modelBuilder.Entity("Domain.Entities.Message", b =>
@@ -147,8 +129,14 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("DeletedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("SenderId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -156,7 +144,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Message");
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Domain.Entities.Participant", b =>
@@ -170,13 +158,15 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ConversationId");
 
-                    b.ToTable("Participant");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Participants");
                 });
 
             modelBuilder.Entity("Domain.Entities.Psychologist", b =>
@@ -204,12 +194,41 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ProfileImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Speciality")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Psychologists");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Report", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ParticipantId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("ReportType")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParticipantId");
+
+                    b.ToTable("Report");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
@@ -219,6 +238,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("ChatConnectionId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -280,24 +302,11 @@ namespace Infrastructure.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("PsychologistId");
+                    b.HasIndex("PsychologistId")
+                        .IsUnique()
+                        .HasFilter("[PsychologistId] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("Domain.Entities.UserContact", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("ContactId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "ContactId");
-
-                    b.HasIndex("ContactId");
-
-                    b.ToTable("UserContact");
                 });
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
@@ -560,9 +569,11 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Conversation", b =>
                 {
-                    b.HasOne("Domain.Entities.User", null)
+                    b.HasOne("Domain.Entities.User", "Creator")
                         .WithMany("Conversations")
                         .HasForeignKey("CreatorId");
+
+                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("Domain.Entities.Message", b =>
@@ -573,11 +584,13 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.User", null)
+                    b.HasOne("Domain.Entities.User", "Sender")
                         .WithMany("Messages")
                         .HasForeignKey("SenderId");
 
                     b.Navigation("Conversation");
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("Domain.Entities.Participant", b =>
@@ -588,33 +601,33 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("Participations")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Conversation");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Report", b =>
+                {
+                    b.HasOne("Domain.Entities.Participant", "Participant")
+                        .WithMany("Reports")
+                        .HasForeignKey("ParticipantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Participant");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
                     b.HasOne("Domain.Entities.Psychologist", "Psychologist")
-                        .WithMany()
-                        .HasForeignKey("PsychologistId");
+                        .WithOne("User")
+                        .HasForeignKey("Domain.Entities.User", "PsychologistId");
 
                     b.Navigation("Psychologist");
-                });
-
-            modelBuilder.Entity("Domain.Entities.UserContact", b =>
-                {
-                    b.HasOne("Domain.Entities.Contact", "Contact")
-                        .WithMany("UserContacts")
-                        .HasForeignKey("ContactId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.User", null)
-                        .WithMany("Contacts")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Contact");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -668,11 +681,6 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entities.Contact", b =>
-                {
-                    b.Navigation("UserContacts");
-                });
-
             modelBuilder.Entity("Domain.Entities.Conversation", b =>
                 {
                     b.Navigation("Messages");
@@ -680,18 +688,25 @@ namespace Infrastructure.Migrations
                     b.Navigation("Participants");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Participant", b =>
+                {
+                    b.Navigation("Reports");
+                });
+
             modelBuilder.Entity("Domain.Entities.Psychologist", b =>
                 {
                     b.Navigation("Address");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
-                    b.Navigation("Contacts");
-
                     b.Navigation("Conversations");
 
                     b.Navigation("Messages");
+
+                    b.Navigation("Participations");
 
                     b.Navigation("PsychologistAppointments");
 

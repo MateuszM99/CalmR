@@ -158,7 +158,7 @@ const Sidebar = () => {
           <Item
             onClick={() => setClick(false)}
             activeClassName="active"
-            to="/app/notes"
+            to="/app/chat"
           >
               <img src={Notes} alt="Notes" />
             <Text clicked={click}>Notes</Text>

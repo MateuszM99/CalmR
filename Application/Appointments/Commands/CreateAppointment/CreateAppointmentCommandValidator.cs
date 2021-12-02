@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System;
+using FluentValidation;
 
 namespace Application.Appointments.Commands.CreateAppointment
 {
@@ -6,11 +7,16 @@ namespace Application.Appointments.Commands.CreateAppointment
     {
         public CreateAppointmentCommandValidator()
         {
+            RuleFor(x => x.PsychologistId)
+                .NotEmpty();
+            
             RuleFor(x => x.AppointmentDate)
-                .NotNull();
+                .NotNull()
+                .GreaterThanOrEqualTo(DateTime.Now);
 
             RuleFor(x => x.AppointmentDurationTime)
-                .NotNull();
+                .NotNull()
+                .GreaterThan(0);
         }
     }
 }

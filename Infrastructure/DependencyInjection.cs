@@ -53,6 +53,7 @@ namespace Infrastructure
             // services required using Identity
             services.AddScoped<IAuthenticateService, AuthenticateService>();
             services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<IUploadService,UploadService>();
 
             services.AddOptions();
             services.Configure<GmailOptions>(configuration);
