@@ -47,7 +47,7 @@ namespace Application.Appointments.Commands.CreateAppointment
                                                                         .Where(a => a.PsychologistId == request.PsychologistId)
                                                                         .ToListAsync(cancellationToken);
 
-            if (psychologistAppointments.Any(a => a.StartDate.AddHours(a.DurationTime) < request.AppointmentDate))
+            if (psychologistAppointments.Any(a => request.AppointmentDate < a.StartDate.AddHours(a.DurationTime) && a.StartDate < request.AppointmentDate.AddHours(request.AppointmentDurationTime)))
             {
                 throw new ApiException("There is already appointment made for this time",StatusCodes.Status405MethodNotAllowed.ToString());
             }
@@ -56,7 +56,7 @@ namespace Application.Appointments.Commands.CreateAppointment
             {
                 StartDate = request.AppointmentDate,
                 DurationTime = request.AppointmentDurationTime,
-                Status = AppointmentStatus.New,
+                Status = AppointmentStatus.AwaitingForConfirmation,
                 PsychologistId = request.PsychologistId,
                 ClientId = user.Id
             };

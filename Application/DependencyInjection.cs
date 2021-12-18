@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Application.Common.Behaviours;
+using Application.Common.Interfaces;
 using Application.Common.Mappings;
 using Application.Psychologists.Queries;
 using AutoMapper;
@@ -14,12 +15,10 @@ namespace Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            var mapperConfig = new MapperConfiguration(mc =>
+            services.AddSingleton(provider => new MapperConfiguration(cfg =>
             {
-                mc.AddProfile(new MappingProfile());
-            });
-            IMapper mapper = mapperConfig.CreateMapper();
-            services.AddSingleton(mapper);
+                cfg.AddProfile(new MappingProfile(provider.GetService<ICurrentUserService>()));
+            }).CreateMapper());
             services.AddMediatR(typeof(GetPsychologistsQuery));
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));

@@ -20,6 +20,10 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasMany(e => e.Conversations)
                 .WithOne(e => e.Creator)
                 .HasForeignKey(e => e.CreatorId);
+
+            builder.HasOne(p => p.Psychologist)
+                .WithOne(u => u.User)
+                .HasForeignKey<Psychologist>(k => k.UserId);
         }
     }
 }

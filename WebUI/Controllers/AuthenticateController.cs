@@ -41,7 +41,7 @@ namespace CalmR.Controllers
         
         [Route("signUp-psychologist")]
         [HttpPost]
-        public async Task<SignUpResponse> SignUpPsychologist([FromBody] SignUpPsychologistCommand command)
+        public async Task<SignUpResponse> SignUpPsychologist([FromForm] SignUpPsychologistCommand command)
         {
             var response = await Mediator.Send(command);
 

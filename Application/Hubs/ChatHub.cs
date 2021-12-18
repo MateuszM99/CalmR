@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Helpers;
 using Application.Common.Interfaces;
+using Application.Conversations.Queries.GetConversations;
 using Application.Messages.Commands;
 using Application.Messages.Queries;
 using Application.Participants.Queries.GetParticipants;
@@ -34,6 +35,18 @@ namespace Application.Hubs
         {
             var message = await _mediator.Send(command);
 
+            var conversation = (await _mediator.Send(new GetConversationsQuery()
+            {
+                ConversationId = command.ConversationId
+            })).FirstOrDefault();
+
+            if (conversation != null)
+            {
+                conversation.LastMessage = message;
+            }
+
+            await Clients.All.SendAsync("UpdateConversation", conversation);
+            
             await Clients.Group(command.ConversationId.ToString()).SendAsync("ReceiveMessage", message);
         }
 
@@ -46,8 +59,13 @@ namespace Application.Hubs
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, ConversationId);
         }
-        
-        
+
+        public async Task UpdateConversation(int ConversationId)
+        {
+            
+        }
+
+
         public override async Task OnConnectedAsync()
         {
             //Context.QueryString

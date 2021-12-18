@@ -36,23 +36,23 @@ namespace Application.Appointments.Commands.CancelAppointment
             
             DateTime now = DateTime.Now;
 
-            if (appointment.StartDate > now.AddDays(-1))
+            if (appointment.Status == AppointmentStatus.Cancelled)
             {
-                appointment.Status = AppointmentStatus.Cancelled;
-                await _context.SaveChangesAsync(cancellationToken);
-
-                return new CancelAppointmentResponse()
-                {
-                    IsSuccessful = true,
-                    Message = "Canceled appointment"
-                };
+                throw new ApiException("Appointment is already canceled", StatusCodes.Status405MethodNotAllowed.ToString());
             }
+            
+            if (!(appointment.StartDate > now.AddDays(-1)))
+            {
+                throw new ApiException("You can only cancel appointments 2 days prior appointment start date", StatusCodes.Status405MethodNotAllowed.ToString());
+            }
+
+            appointment.Status = AppointmentStatus.Cancelled;
+            await _context.SaveChangesAsync(cancellationToken);
 
             return new CancelAppointmentResponse()
             {
-                IsSuccessful = false,
-                Message =
-                    "Couldn't cancel appointment, you can only cancel appointment 2 days prior the appointment date"
+                IsSuccessful = true,
+                Message = "Canceled appointment"
             };
         }
     }

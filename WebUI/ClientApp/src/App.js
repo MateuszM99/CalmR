@@ -70,7 +70,7 @@ function App() {
             <Route path="/app/appointments">
                 <UserAppointmentsPage></UserAppointmentsPage>
             </Route>
-            <Route path="/app/meetings">
+            <Route path="/app/meeting">
                 <UserMeetingsPage></UserMeetingsPage>
             </Route>
             <Route path="/app/notes">
@@ -80,7 +80,6 @@ function App() {
                 <ChatPage></ChatPage>
             </Route>
             <Route path="/">
-              <Navbar></Navbar>
               <Home></Home>
             </Route>
           </Switch>

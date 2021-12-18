@@ -1,121 +1,41 @@
-import React, { useEffect, useState } from 'react'
-import styled from "styled-components";
-import Search from '../../../../application/assets/search-solid.svg';
+import React, { useEffect, useMemo, useState } from 'react'
 import { cancelAppointmentRequest, getAppointmentsRequest } from '../../../../infrastructure/services/api/appointments/AppointmentsRequests';
 import ChangeAppointmentDateForm from '../ChangeAppointmentDateForm/ChangeAppointmentDateForm';
+import DatePicker from '@mui/lab/DatePicker';
+import AdapterDateMoment from '@mui/lab/AdapterMoment';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import SearchIcon from '@mui/icons-material/Search';
+import TextField from '@mui/material/TextField';
+import { MenuItem, Select, Avatar, FormControl, InputLabel, Pagination } from '@mui/material';
+import { Container, InputContainer, ListContainer, ListItem, ListItemContainer, ListItemRow, SearchBar, Header, VerticalLine, FiltersContainer, DatePickerContainer } from './style';
+import { FormButton } from '../../../../application/common/FormButton/FormButton';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import PhoneIcon from '@mui/icons-material/Phone';
+import EventIcon from '@mui/icons-material/Event';
+import PlaceIcon from '@mui/icons-material/Place';
+import AdjustIcon from '@mui/icons-material/Adjust';
+import * as moment from 'moment';
+import useQueryString from '../../../../application/hooks/useQueryString';
+import ConfirmationDialog from '../../../../application/common/ConfirmationDialog/ConfirmationDialog';
+import debounce from 'lodash.debounce';
 
-const Container = styled.div`
-    margin-top: 2rem;
-    align-self: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-`
 
-const SearchBar = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    input {
-        height: 40px;
-        width: 350px;
-        border: none;
-        border-radius: 5px;
-        background: #fff;
-        outline: none;
-        padding: 0 60px 0 20px;
-        font-size: 14px;
-        box-shadow: 1px 1px 10px rgba(0,0,0,.2);
-    }
-
-    .search-icon {
-        margin-left: 10px;
-        background-color: black;
-        width: 40px;
-        height: 40px;
-        border-radius: 5px;
-        cursor: pointer;
-        img {
-            height: 20px;
-            width: 20px;
-        }
-    }
-`
-
-const ListContainer = styled.div`
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`
-const ListItem = styled.div`
-    margin-top: 1rem;
-    height: 350px;
-    width: 700px;
-    border-radius: 5px;
-    box-shadow: 1px 1px 10px rgba(0,0,0,.2);
-    padding: 15px;
-    display: flex;
-
-    .actions {
-        margin-top: 50px;
-        display flex;
-        justify-content: flex-end;
-        margin-left: auto;
-        a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 40px;
-            width: 150px;
-            background-color: black;
-            border-radius: 3px;
-            color: white;
-            font-size: 12px;
-            margin-left: 15px;
-        }
-    }
-`
-
-const ListItemContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-`
-
-const ListItemRow = styled.div `
-    display: flex;
-    flex-direction: column;
-
-    label {
-        font-size: 16px;
-        font-weight: 700;
-    }
-`
-
-const InputContainer = styled.span`
-    display: flex;
-    align-items: center;
-
-    img {
-        height: 40px;
-        width: 40px;
-        border-radius: 50%;
-        margin-right: 10px;
-    }
-
-    p {
-        font-size: 14px;
-        color: grey;
-    }
-`
 
 function UserAppointments() {
+    const [totalPages, setTotalPages] = useState(0);
+    const [currentPageIndex, onSetCurrentPageIndex] = useQueryString("pageIndex", 1);
+    const [textSearch, onSetTextSearch] = useQueryString("s", "");
+    const [appointmentStatus, setAppointmentStatus] = useQueryString("status", "");
+    const [appointmentSort, setAppointmentSort] = useQueryString("sort", "");
+    const [appointmentDate, setAppointmentDate] = useQueryString("date",null);
     const [appointments, setAppointments] = useState(null);
     const [open, setOpen] = useState(false);
-
-    const handleClickOpen = () => {     
+    const [selectedPsychologist, setSelectedPsychologist] = useState(null);
+    const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
+    const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+    
+    const handleClickOpen = (psychologist) => {   
+        setSelectedPsychologist(psychologist)  
         setOpen(true);
     };
 
@@ -123,89 +43,149 @@ function UserAppointments() {
         setOpen(false);
     };
 
+    const handleConfirmationDialogClose = () => {
+        setOpenConfirmationDialog(false);
+    };
+
     const getAppointments = async () => {
         try{
-            let response = await getAppointmentsRequest();
-            setAppointments(response.data);
+            console.log('is here')
+            let response = await getAppointmentsRequest(currentPageIndex, textSearch, appointmentStatus, appointmentSort, appointmentDate);
+            setAppointments(response.data.data);
+            setTotalPages(response.data.totalPages);
         } catch(err){
             console.log(err);
         }
     }
 
-    const handleAppointmentCancel = async (appointmentId) => {
-        try{
-            let response = await cancelAppointmentRequest({appointmentId});
-            console.log(response.data);
-        } catch(err){
-            console.log(err);
-        }
+    const handleTextSearchChange = (e) => {
+        onSetTextSearch(e.target.value);
+    }
+
+    const handlePageChange = (event,pageNumber) => {
+        onSetCurrentPageIndex(pageNumber);
     }
 
     useEffect(() => {
-        if(appointments == null){
-            getAppointments();
-        }
+        getAppointments();
     },[])
+
+
+    useEffect(() => {
+            getAppointments();
+    },[currentPageIndex, appointmentStatus, appointmentSort, appointmentDate])
 
     return (
         <Container>
             <SearchBar>
-                <input type="text" placeholder="Type to search.."/>
-                <div className="search-icon">
-                    <img src={Search} alt="Search"></img>
-                </div>
+                    <input type="text" placeholder="Type to search.." onChange={handleTextSearchChange}/>
+                    <div className="search-icon" onClick={getAppointments}>
+                        <SearchIcon fontSize="medium"/>
+                    </div>
             </SearchBar>
+            <FiltersContainer>
+                <DatePickerContainer>
+                    <LocalizationProvider dateAdapter={AdapterDateMoment}>               
+                            <DatePicker
+                                label="Appointment Date"
+                                value={appointmentDate}
+                                onChange={(newValue) => {
+                                    setAppointmentDate(newValue.format('YYYY-MM-DD'));
+                                }}
+                                renderInput={(params) => <TextField {...params} />}                                       
+                            />
+                    </LocalizationProvider>
+                </DatePickerContainer>
+                <FormControl sx={{ m: 1, minWidth: 250 }}>
+                    <InputLabel id="status-select">Status</InputLabel>
+                    <Select
+                        labelId="status-select"
+                        id="status"
+                        label="Status"
+                        onChange={(event) => setAppointmentStatus(event.target.value)}
+                    >
+                        <MenuItem value="">All</MenuItem>
+                        <MenuItem value="awaiting">Awaiting for confirmation</MenuItem>
+                        <MenuItem value="confirmed">Confirmed</MenuItem>
+                        <MenuItem value="rejected">Rejected</MenuItem>
+                        <MenuItem value="cancelled">Cancelled</MenuItem>
+                        <MenuItem value="ended">Ended</MenuItem>
+                    </Select>
+                </FormControl>
+                <FormControl sx={{ m: 1, minWidth: 250 }}>
+                    <InputLabel id="sort-select">Sort</InputLabel>
+                    <Select
+                        labelId="sort-select"
+                        id="sort"
+                        label="Sort"
+                        onChange={(event) => setAppointmentSort(event.target.value)}
+                    >
+                        <MenuItem value="">None</MenuItem>
+                        <MenuItem value="date">Order by date</MenuItem>
+                    </Select>
+                </FormControl>
+            </FiltersContainer>
             <ListContainer>
                 {appointments?.map(appointment =>
-                    <ListItem>
-                    <ListItemContainer>
-                        <ListItemRow>
-                            <label>Doctor:</label>
-                            <InputContainer>
-                                <img src="https://s3-eu-west-1.amazonaws.com/znanylekarz.pl/doctor/866515/8665158d72bdce9242f7d1f1b526b19e_large.jpg"></img>
-                                <p>mgr Krzysztof Zawada</p>
-                            </InputContainer>
-                            <label>Doctor phone:</label>
-                            <InputContainer>
-                                <img></img>
-                                <p>mgr Krzysztof Zawada</p>
-                            </InputContainer>
-                            <label>Doctor address:</label>
-                            <InputContainer>
-                                <img></img>
-                                <p>mgr Krzysztof Zawada</p>
-                            </InputContainer>
-                        </ListItemRow>
-                        <ListItemRow>
-                            <label>Appointment date:</label>
-                            <InputContainer>
-                                <img></img>
-                                <p>mgr Krzysztof Zawada</p>
-                            </InputContainer>
-                            <label>Appointment start time:</label>
-                            <InputContainer>
-                                <img></img>
-                                <p>mgr Krzysztof Zawada</p>
-                            </InputContainer>
-                            <label>Appointment duration time:</label>
-                            <InputContainer>
-                                <img></img>
-                                <p>mgr Krzysztof Zawada</p>
-                            </InputContainer>
-                    </ListItemRow>
-                   </ListItemContainer>
-                   <span className="actions">
-                        <a onClick={() => handleAppointmentCancel(appointment.id)}>Cancel appointment</a>
-                        <a onClick={handleClickOpen}>Change appointment date</a>
-                    </span>
-                    <ChangeAppointmentDateForm
-                    appointmentId = {appointment.id}
-                    open={open}
-                    onClose={handleClose}
-                    />
-                </ListItem>
+                    <ListItem key={appointment.id}>
+                        <ListItemContainer>
+                            <ListItemRow>
+                                <Header>Psychologist</Header>
+                                <InputContainer>
+                                    <Avatar src={appointment.psychologist?.profileImageUrl}/>
+                                    <p>{appointment.psychologist?.firstName} {appointment.psychologist?.lastName}</p>
+                                </InputContainer>
+                                <InputContainer>
+                                    <PhoneIcon/>
+                                    <p>{appointment.psychologist?.phoneNumber}</p>
+                                </InputContainer>                               
+                                <InputContainer>
+                                    <PlaceIcon/>
+                                    <p>{appointment.psychologist?.address?.country} &bull; {appointment.psychologist?.address?.city} &bull; {appointment.psychologist?.address?.addressLine1}</p>
+                                </InputContainer>
+                            </ListItemRow>
+                            <VerticalLine></VerticalLine>
+                            <ListItemRow>
+                                <Header>Appointment</Header>
+                                <InputContainer>
+                                    <EventIcon/>
+                                    <p>{moment(appointment.startDate).format('YYYY-MM-DD')}</p>
+                                </InputContainer>                               
+                                <InputContainer>
+                                    <AccessTimeIcon/>
+                                    <p>{moment(appointment.startDate).format('HH:mm')}</p>
+                                </InputContainer>                               
+                                <InputContainer>
+                                    <AdjustIcon/>
+                                    <p>{appointment.status}</p>
+                                </InputContainer>
+                            </ListItemRow>
+                        </ListItemContainer>
+                        <span className="actions">
+                            <FormButton width="200px" height="42px" fontSize="12px" onClick={() => {
+                                setSelectedAppointmentId(appointment.id)
+                                setOpenConfirmationDialog(true)
+                            }}>Cancel appointment</FormButton>
+                            <FormButton width="200px" height="42px" fontSize="11px" onClick={() => {
+                                setSelectedAppointmentId(appointment.id)
+                                handleClickOpen(appointment.psychologist)
+                                }}>Change appointment date</FormButton>
+                        </span>
+                    </ListItem>
                 )}               
             </ListContainer>
+            <ChangeAppointmentDateForm
+                psychologist = {selectedPsychologist}
+                appointmentId = {selectedAppointmentId}
+                open={open}
+                onClose={handleClose}
+            />
+            <ConfirmationDialog
+                open = {openConfirmationDialog}
+                onClose = {handleConfirmationDialogClose}
+                onAgreeAction = {() => cancelAppointmentRequest({appointmentId: selectedAppointmentId})}
+            />
+            <Pagination count={totalPages} color="primary" defaultPage={1} page={currentPageIndex} onChange={handlePageChange} style={{margin:"30px 0px"}}/>
         </Container>
     )
 }

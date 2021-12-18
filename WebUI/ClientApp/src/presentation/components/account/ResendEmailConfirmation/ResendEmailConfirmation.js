@@ -1,24 +1,43 @@
 import React, { useState } from 'react';
 import {Formik,Form,Field} from 'formik';
 import * as Yup from 'yup';
-import './style.scss';
+import styled from 'styled-components';
 import { resendConfirmationEmailRequest } from '../../../../infrastructure/services/api/auth/AuthRequests';
+import { FormContainer } from '../../../../application/common/FormContainer/FormContainer';
+import { FormTextInput } from '../../../../application/common/FormTextInput/FormTextInput';
+import { FormButton } from '../../../../application/common/FormButton/FormButton';
+
+const Header = styled.h5`
+    align-self: center;
+    color: grey;
+`
+
+const ErrorDisplay = styled.div`
+    margin-top: 5px;
+    font-size: 10px;
+    color: grey;
+`
+
+const Text = styled.p`
+    margin-top: 5px;
+    font-size: 16px;
+    color: grey;
+`
+
 
 function ResendEmailConfirmation() {
     const [isSent,setIsSent] = useState(false);
     
     if(isSent){
         return (
-            <div className="signup__container">
-                <div className="signup__container__box">
-                    <p>Successfully sent confirmation email, now go to your email and confirm your account</p>
-                </div>
-            </div>
+            <FormContainer height='200px' width='500px'>
+                    <Header>Success</Header>
+                    <Text>Successfully sent confirmation email, now go to your email and confirm your account</Text>
+            </FormContainer>
         )
     }
 
     return (
-        <div>
             <Formik
                 initialValues={{
                     email : '',
@@ -47,22 +66,17 @@ function ResendEmailConfirmation() {
             >
                 {({ errors, touched,isSubmitting,status}) => (
                 <Form>
-                <div className="reset__container__box">                           
-                    <h3>Resend email confirmation</h3>             
-                    <div className="reset__container__box__input">
-                    <label>Email</label>
-                    <Field type="text" placeholder="Enter your username" name="email"></Field>
-                    {errors.email && touched.email ? <div className="reset-validation">{errors.email}</div> : null}
-                    </div>                           
-                    <button className="reset__container__box__button">{isSubmitting ? 'Sending ...' : 'Send confirmation link'}</button> 
-                    {status && status.errorMessage ? (
-                        <div className="reset-validation">{status.errorMessage}</div>
-                    ) : null}            
-                    </div>
+                    <FormContainer height='350px' width='500px'>                            
+                        <Header>Resend email confirmation</Header>        
+                        <FormTextInput type="text" placeholder="Enter your email" name="email" label="E-mail"/>                           
+                        <FormButton width="250px" height="48px">{isSubmitting ? 'Sending ...' : 'Send confirmation link'}</FormButton> 
+                        {status && status.errorMessage ? (
+                            <ErrorDisplay>{status.errorMessage}</ErrorDisplay>
+                        ) : null}            
+                   </FormContainer>
                 </Form>
                 )}
             </Formik>
-        </div>
     )
 }
 

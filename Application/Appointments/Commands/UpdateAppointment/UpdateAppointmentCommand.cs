@@ -39,7 +39,7 @@ namespace Application.Appointments.Commands.UpdateAppointment
                 .Where(a => a.PsychologistId == appointment.PsychologistId)
                 .ToListAsync(cancellationToken);
 
-            if (psychologistAppointments.Any(a => a.StartDate.AddHours(a.DurationTime) < request.AppointmentDate))
+            if (psychologistAppointments.Any(a => request.AppointmentDate < a.StartDate.AddHours(a.DurationTime) && a.StartDate < request.AppointmentDate.AddHours(request.AppointmentDurationTime)))
             {
                 throw new ApiException("There is already appointment made for this time",StatusCodes.Status405MethodNotAllowed.ToString());
             }

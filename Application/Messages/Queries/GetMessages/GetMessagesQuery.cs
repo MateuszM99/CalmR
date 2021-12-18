@@ -43,6 +43,14 @@ namespace Application.Messages.Queries
                 throw new ApiException("User was not found", StatusCodes.Status404NotFound.ToString());
             }
 
+            var isParticipant = await _context.Conversations.Where(c => c.Id == request.ConversationId)
+                                                            .AnyAsync(c => c.Participants.Select(p => p.User).Contains(user), cancellationToken);
+
+            if (!isParticipant)
+            {
+                throw new ApiException("Cannot load this conversation", StatusCodes.Status405MethodNotAllowed.ToString());
+            }
+            
             var query = _context.Messages.Include(m => m.Sender).AsQueryable();
 
             query = ApplyFilter(query, request);

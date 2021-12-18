@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Application.Common.DTO;
 using Application.Psychologists.Queries;
 using CalmR.Models.Authenticate.Commands.SignIn;
 using Infrastructure.Identity.Authentication;
@@ -11,9 +12,14 @@ namespace CalmR.Controllers
     {
         [Route("get/psychologists")]
         [HttpGet]
-        public async Task<List<PsychologistDTO>> List()
+        public async Task<PagedResult<PsychologistDTO>> List([FromQuery] PageDTO pageDto, [FromQuery] string s)
         {
-            var response = await Mediator.Send(new GetPsychologistsQuery());
+            
+            var response = await Mediator.Send(new GetPsychologistsQuery()
+            {
+                pageDto = pageDto,
+                textSearch = s,
+            });
             
             return response;
         }

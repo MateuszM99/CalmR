@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Application.Conversations.Commands.CreateConversation;
 using Application.Conversations.Queries;
 using Application.Conversations.Queries.GetConversations;
+using Application.Conversations.Queries.GetRecentConversation;
 using Application.Conversations.Queries.GetUserPsychologistConversation;
 using Application.Messages.Queries;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,15 @@ namespace CalmR.Controllers
         [Route("get/user-psychologist-conversation")]
         [HttpGet]
         public async Task<ConversationDTO> GetUserPsychologistConversations([FromQuery]GetUserPsychologistConversationQuery query)
+        {
+            var response = await Mediator.Send(query);
+            
+            return response;
+        }
+        
+        [Route("get/recent-conversation")]
+        [HttpGet]
+        public async Task<int?> GetRecentConversation([FromQuery]GetRecentConversationQuery query)
         {
             var response = await Mediator.Send(query);
             

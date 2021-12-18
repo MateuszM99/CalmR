@@ -40,7 +40,7 @@ namespace Application.Appointments.Queries.GetAvailableHours
                                                                             a.StartDate >= startOfWorkDayDate && a.StartDate <= endOfWorkDayDate)
                                                                             .ToListAsync(cancellationToken);
             
-            listOfPossibleDates = listOfPossibleDates.Where(d => !listOfMadeAppointments.Any(a => d < a.StartDate.AddHours(a.DurationTime) && a.StartDate < d.AddHours(request.AppointmentDurationTime))).ToList();
+            listOfPossibleDates = listOfPossibleDates.Where(d => !listOfMadeAppointments.Any(a => d < a.StartDate.AddHours(a.DurationTime) && a.StartDate < d.AddHours(request.AppointmentDurationTime))).Where(d => d > DateTime.Now).ToList();
 
 
             return listOfPossibleDates;

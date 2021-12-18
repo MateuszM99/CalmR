@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Home from '../../../../application/assets/home-solid.svg'
 import Psychologist from '../../../../application/assets/search-plus-solid.svg'
 import Appointments from '../../../../application/assets/calendar-check-solid.svg'
-import Meetings from '../../../../application/assets/comment-dots-solid.svg'
+import Chat from '../../../../application/assets/comment-dots-solid.svg'
 import Notes from '../../../../application/assets/clipboard-regular.svg'
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
+import { getRecentConversationIdRequest } from "../../../../infrastructure/services/api/conversations/ConversationsRequests";
+import PermPhoneMsgIcon from '@mui/icons-material/PermPhoneMsg';
 
 const Container = styled.div`
-  background-color: black;
+  background-color: #1325C8;
   position: fixed;
   top: 15rem;
   width: 3.5rem;
@@ -23,7 +25,8 @@ const Container = styled.div`
 `;
 
 const Button = styled.button`
-  background-color: black;
+  background-color: #1325C8;
+  color: #1325C8;
   border: none;
   width: 2.5rem;
   height: 2.5rem;
@@ -54,7 +57,7 @@ const Button = styled.button`
 `;
 
 const SidebarContainer = styled.div`
-  background-color: black;
+  background-color: #1325C8;
   width: 3.5rem;
   height: 40vh;
   border-radius: 0 30px 30px 0;
@@ -68,11 +71,12 @@ const SidebarContainer = styled.div`
 
 const SlickBar = styled.ul`
   color: white;
+  height: 40vh;
   list-style: none;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: black;
+  background-color: #1325C8;
   padding: 2rem 0;
   position: absolute;
   top: 2rem;
@@ -91,6 +95,8 @@ const Item = styled(NavLink)`
   display: flex;
   padding-left: 1rem;
   &:hover {
+    text-decoration: none;
+    color: white;
     border-right: 4px solid white;
     img {
       filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg)
@@ -114,7 +120,26 @@ const Text = styled.span`
 
 const Sidebar = () => {
   const [click, setClick] = useState(false);
+  const [recentConversationId, setRecentConversationId] = useState(null);
   const handleClick = () => setClick(!click);
+
+  const getRecentConversationId = async () => {
+    try {
+        let response = await getRecentConversationIdRequest();
+        console.log(response.data);
+        if(response.data != null){
+            setRecentConversationId(response.data)
+        }
+    } catch(err) {
+        console.log(err);
+    }
+  }
+
+
+  useEffect(() => {
+    getRecentConversationId();
+  }, [])
+
 
   return (
     <Container>
@@ -150,18 +175,18 @@ const Sidebar = () => {
           <Item
             onClick={() => setClick(false)}
             activeClassName="active"
-            to="/app/meetings"
+            to={`/app/chat/${recentConversationId}`}
           >
-              <img src={Meetings} alt="Meetings" />
-            <Text clicked={click}>Meetings</Text>
+              <img src={Chat} alt="Chat" />
+            <Text clicked={click}>Chat</Text>
           </Item>
           <Item
             onClick={() => setClick(false)}
             activeClassName="active"
-            to="/app/chat"
+            to="/app/meeting"
           >
-              <img src={Notes} alt="Notes" />
-            <Text clicked={click}>Notes</Text>
+            <PermPhoneMsgIcon/>
+            <Text clicked={click}>Meeting</Text>
           </Item>
         </SlickBar>
       </SidebarContainer>

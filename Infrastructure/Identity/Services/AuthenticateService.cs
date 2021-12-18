@@ -6,12 +6,14 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Common.Exceptions;
+using Application.Common.Interfaces;
 using Domain.Entities;
 using Infrastructure.Identity.Authentication;
 using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -19,6 +21,7 @@ namespace Infrastructure.Identity.Services
 {
     public class AuthenticateService : IAuthenticateService
     {
+        private readonly IApplicationDbContext _context;
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly IEmailSender _emailSender;
@@ -30,11 +33,12 @@ namespace Infrastructure.Identity.Services
             SignInManager<User> signInManager,
             IOptions<Token> tokenOptions,
             IEmailSender emailSender,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, IApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _context = context;
             _token = tokenOptions.Value;
             _httpContext = httpContextAccessor.HttpContext;
         }
@@ -76,6 +80,11 @@ namespace Infrastructure.Identity.Services
             if (!signInResult.Succeeded)
             {
                 throw new ApiException("Username or password was incorrect", "401");
+            }
+
+            if (user.PsychologistId != null)
+            {
+                user.Psychologist = await _context.Psychologists.FirstOrDefaultAsync(p => p.UserId == user.Id);
             }
             
             var roles = (await _userManager.GetRolesAsync(user));

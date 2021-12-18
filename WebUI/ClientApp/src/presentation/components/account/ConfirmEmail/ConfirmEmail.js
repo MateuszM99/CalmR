@@ -2,6 +2,21 @@ import React,{useState, useEffect} from 'react';
 import {Link,useParams, useLocation} from 'react-router-dom';
 import axios from 'axios';
 import { confirmEmailRequest } from '../../../../infrastructure/services/api/auth/AuthRequests';
+import { FormContainer } from '../../../../application/common/FormContainer/FormContainer';
+import styled from 'styled-components';
+import { RedirectLink } from '../../../../application/common/RedirectLink/RedirectLink';
+
+
+const Header = styled.h3`
+    align-self: center;
+    color: grey;
+`
+
+const Text = styled.p`
+    margin-top: 5px;
+    font-size: 16px;
+    color: grey;
+`
 
 function useQuery() {
     const { search } = useLocation();
@@ -33,17 +48,19 @@ function ConfirmEmail() {
 
     if(isConfirmed){
         return (
-            <div>
-                <h1>Hello</h1>
-                <p>Your account is confirmed <Link to="/">go to main page</Link></p>
-            </div>
+            <FormContainer height='200px' width='550px'>
+                <Header>Hello!</Header>
+                <Text>Your account is confirmed <RedirectLink fontSize="16px" to="/">go to main page.</RedirectLink></Text>
+            </FormContainer>
         )
     }
+    
     if(errorMessage){
         return (
-            <div>
-                <p>Something went wrong try resending confirmation <Link to="/account/resend-confirm">here</Link></p>
-            </div>
+            <FormContainer height='200px' width='550px'>
+                <Header>Hello!</Header>
+                <Text>Something went wrong try resending confirmation <RedirectLink fontSize="16px" to="/account/resend-confirm">here.</RedirectLink></Text>
+            </FormContainer>
         )
     }
 

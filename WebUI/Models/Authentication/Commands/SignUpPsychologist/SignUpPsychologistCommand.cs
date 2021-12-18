@@ -17,13 +17,11 @@ namespace CalmR.Models.Authentication.Commands.SignUpPsychologist
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public int CostPerHour { get; set; }
-        public string Description { get; set; }
+        public IFormFile ProfileImage { get; set; }
         public string Country { get; set; }
         public string City { get; set; }
-        public string Street { get; set; }
-        public int HouseNumber { get; set; }
-        public int? ApartmentNumber { get; set; }
+        public string AddressLine1 { get; set; }
+        public string AddressLine2 { get; set; }
         public string ZipCode { get; set; }
     }
     
@@ -51,15 +49,12 @@ namespace CalmR.Models.Authentication.Commands.SignUpPsychologist
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 ProfileImageUrl = defaultProfileImageUrl,
-                CostPerHour = request.CostPerHour,
-                Description = request.Description,
                 Address = new Address()
                 {
                     Country = request.Country,
                     City = request.City,
-                    Street = request.Street,
-                    HouseNumber = request.HouseNumber,
-                    ApartmentNumber = request.ApartmentNumber,
+                    AddressLine1 = request.AddressLine1,
+                    AddressLine2 = request.AddressLine2,
                     ZipCode = request.ZipCode
                 }
             };
@@ -79,7 +74,15 @@ namespace CalmR.Models.Authentication.Commands.SignUpPsychologist
             SignUpResponse signUpResponse = await _authenticateService.SignUp(signUpRequest, RequestHelpers.GetIpAddress(_httpContext), RequestHelpers.GetOrigin(_httpContext));
             if (!signUpResponse.Succeeded)
             {
+                _context.Psychologists.Remove(newPsychologist);
                 throw new ApiException("Something went wrong",StatusCodes.Status500InternalServerError.ToString());
+            }
+
+            if (request.ProfileImage != null)
+            {
+                var profileImageUrl = await _uploadService.UploadPhotoAsync(request.ProfileImage, newPsychologist.Id);
+
+                newPsychologist.ProfileImageUrl = profileImageUrl;
             }
 
             return signUpResponse;

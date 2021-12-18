@@ -47,7 +47,9 @@ namespace CalmR
             {
                 options.Filters.Add(typeof(HandleExceptionsFilter));
 
-            });
+            }).AddNewtonsoftJson(options => 
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder => 
@@ -98,6 +100,7 @@ namespace CalmR
                     pattern: "{controller}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
                 endpoints.MapHub<ChatHub>("/hubs/chat");
+                endpoints.MapHub<VideoChatHub>("/hubs/videoChat");
             });
 
             app.UseSpa(spa =>

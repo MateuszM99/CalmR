@@ -11,12 +11,16 @@ namespace Infrastructure.Identity.Authentication
         {
             Id = user.Id;
             EmailAddress = user.Email;
+            UserName = user.UserName;
+            ProfileImageUrl = user.Psychologist?.ProfileImageUrl;
             Token = token;
             Role = role;
         }
 
         public string Id { get; set; }
+        public string UserName { get; set; }
         public string EmailAddress { get; set; }
+        public string ProfileImageUrl { get; set; }
         public string Token { get; set; }
         public string Role { get; set; }
     }

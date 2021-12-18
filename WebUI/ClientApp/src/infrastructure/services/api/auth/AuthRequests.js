@@ -11,7 +11,24 @@ export function signUpRequest(signUpData){
 }
 
 export function signUpPsychologistRequest(signUpData){
-    return axios.post(`${baseUrl}/api/authenticate/signUp-psychologist`,signUpData);
+    const config = {
+        headers: { 'content-type': 'multipart/form-data' }
+    }
+    let formData = new FormData();
+    formData.append('username', signUpData.username);
+    formData.append('email', signUpData.email);
+    formData.append('password', signUpData.password);
+    formData.append('confirmPassword', signUpData.confirmPassword);
+    formData.append('firstName', signUpData.firstName);
+    formData.append('lastName', signUpData.lastName);
+    formData.append('profileImage', signUpData.profileImage);
+    formData.append('country', signUpData.country);
+    formData.append('city', signUpData.city);
+    formData.append('addressLine1', signUpData.addressLine1);
+    formData.append('addressLine2', signUpData.addressLine2);
+    formData.append('zipCode', signUpData.zipCode);
+
+    return axios.post(`${baseUrl}/api/authenticate/signUp-psychologist`, formData, config);
 }
 
 export function confirmEmailRequest(confirmEmailData){

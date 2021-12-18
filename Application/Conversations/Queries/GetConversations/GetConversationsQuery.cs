@@ -45,7 +45,11 @@ namespace Application.Conversations.Queries.GetConversations
             var query = _context.Conversations.Where(c => c.Participants.Any(p => p.UserId == user.Id)).AsQueryable();
             query = ApplyFilter(request, query);
 
-            var conversations = await query.Include(c => c.Messages).ToListAsync(cancellationToken);
+            var conversations = await query.Include(c => c.Messages)
+                                                        .Include(u => u.Participants)
+                                                        .ThenInclude(p => p.User)
+                                                        .ThenInclude(u => u.Psychologist)
+                                                        .ToListAsync(cancellationToken);
 
             return _mapper.Map<List<ConversationDTO>>(conversations);
         }
