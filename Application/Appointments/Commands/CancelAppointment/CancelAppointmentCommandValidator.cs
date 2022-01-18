@@ -1,4 +1,4 @@
-﻿namespace Application.Appointments.Commands.CancelAppointment
+﻿namespace Application.Appointments.Commands
 {
     public class CancelAppointmentCommandValidator
     {

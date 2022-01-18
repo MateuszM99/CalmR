@@ -9,13 +9,13 @@ import { RedirectLink } from '../../../../application/common/RedirectLink/Redire
 
 const Header = styled.h3`
     align-self: center;
-    color: grey;
+    color: white;
 `
 
 const Text = styled.p`
     margin-top: 5px;
     font-size: 16px;
-    color: grey;
+    color: white;
 `
 
 function useQuery() {

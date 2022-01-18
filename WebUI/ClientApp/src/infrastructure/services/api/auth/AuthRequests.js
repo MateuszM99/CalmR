@@ -21,6 +21,7 @@ export function signUpPsychologistRequest(signUpData){
     formData.append('confirmPassword', signUpData.confirmPassword);
     formData.append('firstName', signUpData.firstName);
     formData.append('lastName', signUpData.lastName);
+    formData.append('phoneNumber', signUpData.phoneNumber);
     formData.append('profileImage', signUpData.profileImage);
     formData.append('country', signUpData.country);
     formData.append('city', signUpData.city);

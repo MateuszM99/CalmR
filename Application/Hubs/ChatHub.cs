@@ -1,15 +1,18 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Helpers;
 using Application.Common.Interfaces;
 using Application.Conversations.Queries.GetConversations;
+using Application.Files.Commands.AddFile;
 using Application.Messages.Commands;
 using Application.Messages.Queries;
 using Application.Participants.Queries.GetParticipants;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +38,9 @@ namespace Application.Hubs
         {
             var message = await _mediator.Send(command);
 
+            message.FileName = command.Filename;
+            message.FileId = command.FileId;
+            
             var conversation = (await _mediator.Send(new GetConversationsQuery()
             {
                 ConversationId = command.ConversationId

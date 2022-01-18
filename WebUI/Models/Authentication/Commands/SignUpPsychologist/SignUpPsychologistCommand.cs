@@ -17,6 +17,7 @@ namespace CalmR.Models.Authentication.Commands.SignUpPsychologist
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string PhoneNumber { get; set; }
         public IFormFile ProfileImage { get; set; }
         public string Country { get; set; }
         public string City { get; set; }
@@ -48,6 +49,7 @@ namespace CalmR.Models.Authentication.Commands.SignUpPsychologist
             {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
+                PhoneNumber = request.PhoneNumber,
                 ProfileImageUrl = defaultProfileImageUrl,
                 Address = new Address()
                 {

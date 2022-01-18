@@ -6,11 +6,11 @@ import {PageContainer} from '../../../../application/common/PageContainer/PageCo
 
 function UserPsychologistPage() {
     return (
-        <div>
+        <PageContainer>
             <Navbar></Navbar>
             <Sidebar></Sidebar>
             <UserPsychologist></UserPsychologist>
-        </div>
+        </PageContainer>
     )
 }
 

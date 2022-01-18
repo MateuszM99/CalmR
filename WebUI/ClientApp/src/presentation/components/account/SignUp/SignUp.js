@@ -13,19 +13,19 @@ import { RedirectLink } from '../../../../application/common/RedirectLink/Redire
 const Header = styled.h5`
     margin-top: 15px;
     align-self: center;
-    color: grey;
+    color: white;
 `
 
 const ErrorDisplay = styled.div`
     margin-top: 5px;
     font-size: 10px;
-    color: grey;
+    color: white;
 `
 
 const Text = styled.p`
     margin-top: 5px;
     font-size: 16px;
-    color: grey;
+    color: white;
 `
 
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
@@ -64,6 +64,8 @@ function SignUp() {
                 <Formik
                     initialValues={{
                         username : '',
+                        firstName : '',
+                        lastName: '',
                         email : '',
                         password : '',
                         confirmPassword: '',
@@ -71,6 +73,10 @@ function SignUp() {
                     validationSchema = {Yup.object({
                         username : Yup.string()
                             .required('Username is required'),
+                        firstName : Yup.string()
+                            .required('First name is required'),
+                        lastName : Yup.string()
+                            .required('Last name is required'),
                         email : Yup.string()
                             .email('Invalid email')
                             .required('Email is required'),
@@ -101,9 +107,11 @@ function SignUp() {
                 >
                     {({ errors, touched,status,isSubmitting }) => (
                     <Form>  
-                        <FormContainer height='850px' width='500px'>
+                        <FormContainer height='950px' width='500px'>
                             <Header>Sign up</Header>       
                             <FormTextInput type="text" placeholder="Enter your username" name="username" label="Username"/>
+                            <FormTextInput type="text" placeholder="Enter your first name" name="firstName" label="First name"/>
+                            <FormTextInput type="text" placeholder="Enter your last name" name="lastName" label="Last name"/>
                             <FormTextInput type="text" placeholder="Enter your email" name="email" label="E-mail"/>
                             <FormTextInput type="password" placeholder="Enter your password" name="password" label="Password"/>
                             <FormTextInput type="password" placeholder="Enter your password again" name="confirmPassword" label="Confirm Password"/>

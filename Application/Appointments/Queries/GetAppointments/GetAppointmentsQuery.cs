@@ -54,6 +54,8 @@ namespace Application.Appointments.Queries
                                                             .Where(a => a.ClientId == user.Id || a.PsychologistId == user.Id)
                                                             .Include(a => a.Psychologist)
                                                             .ThenInclude(u => u.Psychologist)
+                                                            .ThenInclude(a => a.Address)
+                                                            .Include(a => a.Client)
                                                             .AsQueryable();
             
             appointments = ApplyFilter(appointments, request);

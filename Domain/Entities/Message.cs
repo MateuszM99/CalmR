@@ -14,5 +14,7 @@ namespace Domain.Entities
         public virtual User Sender { get; set; }
         public int ConversationId { get; set; }
         public virtual Conversation Conversation { get; set; }
+        public long? FileId { get; set; }
+        public virtual File File { get; set; }
     }
 }

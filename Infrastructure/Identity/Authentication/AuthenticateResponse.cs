@@ -15,6 +15,7 @@ namespace Infrastructure.Identity.Authentication
             ProfileImageUrl = user.Psychologist?.ProfileImageUrl;
             Token = token;
             Role = role;
+            PsychologistId = user.PsychologistId;
         }
 
         public string Id { get; set; }
@@ -23,5 +24,6 @@ namespace Infrastructure.Identity.Authentication
         public string ProfileImageUrl { get; set; }
         public string Token { get; set; }
         public string Role { get; set; }
+        public int? PsychologistId { get; set; }
     }
 }

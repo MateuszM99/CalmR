@@ -57,8 +57,8 @@ namespace Infrastructure
             services.AddScoped<IUploadService,UploadService>();
 
             services.AddOptions();
-            services.Configure<GmailOptions>(configuration);
-            services.Configure<CloudinaryOptions>(configuration);
+            services.Configure<GmailOptions>(options => configuration.GetSection("GmailOptions").Bind(options));
+            services.Configure<CloudinaryOptions>(options => configuration.GetSection("CloudinaryOptions").Bind(options));
 
             return services;
         }

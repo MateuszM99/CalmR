@@ -58,9 +58,7 @@ namespace CalmR
                         .AllowAnyHeader()
                         .AllowCredentials());
             });
-            
-            
-            
+
             services.AddRazorPages();
 
             // In production, the React files will be served from this directory

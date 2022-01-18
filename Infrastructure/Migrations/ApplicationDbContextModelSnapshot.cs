@@ -110,6 +110,27 @@ namespace Infrastructure.Migrations
                     b.ToTable("Conversations");
                 });
 
+            modelBuilder.Entity("Domain.Entities.File", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte[]>("FileContent")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("FileExtension")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Filename")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Files");
+                });
+
             modelBuilder.Entity("Domain.Entities.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -129,6 +150,9 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("DeletedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<long?>("FileId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("SenderId")
                         .HasColumnType("nvarchar(450)");
 
@@ -138,6 +162,8 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ConversationId");
+
+                    b.HasIndex("FileId");
 
                     b.HasIndex("SenderId");
 
@@ -188,13 +214,20 @@ namespace Infrastructure.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ProfileImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Psychologists");
                 });
@@ -250,8 +283,14 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsEnabled")
                         .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -298,10 +337,6 @@ namespace Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("PsychologistId")
-                        .IsUnique()
-                        .HasFilter("[PsychologistId] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -581,11 +616,17 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.File", "File")
+                        .WithMany()
+                        .HasForeignKey("FileId");
+
                     b.HasOne("Domain.Entities.User", "Sender")
                         .WithMany("Messages")
                         .HasForeignKey("SenderId");
 
                     b.Navigation("Conversation");
+
+                    b.Navigation("File");
 
                     b.Navigation("Sender");
                 });
@@ -607,6 +648,15 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Psychologist", b =>
+                {
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithOne("Psychologist")
+                        .HasForeignKey("Domain.Entities.Psychologist", "UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Entities.Report", b =>
                 {
                     b.HasOne("Domain.Entities.Participant", "Participant")
@@ -616,15 +666,6 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Participant");
-                });
-
-            modelBuilder.Entity("Domain.Entities.User", b =>
-                {
-                    b.HasOne("Domain.Entities.Psychologist", "Psychologist")
-                        .WithOne("User")
-                        .HasForeignKey("Domain.Entities.User", "PsychologistId");
-
-                    b.Navigation("Psychologist");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -693,8 +734,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Psychologist", b =>
                 {
                     b.Navigation("Address");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
@@ -704,6 +743,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("Messages");
 
                     b.Navigation("Participations");
+
+                    b.Navigation("Psychologist");
 
                     b.Navigation("PsychologistAppointments");
 

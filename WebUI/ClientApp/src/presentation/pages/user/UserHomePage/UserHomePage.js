@@ -1,13 +1,14 @@
 import React from 'react'
 import Navbar from '../../../components/common/Navbar/Navbar'
 import Sidebar from '../../../components/user/Sidebar/Sidebar'
+import {PageContainer} from '../../../../application/common/PageContainer/PageContainer'
 
 function UserHomePage() {
     return (
-        <div>
+        <PageContainer>
             <Navbar></Navbar>
             <Sidebar></Sidebar>
-        </div>
+        </PageContainer>
     )
 }
 

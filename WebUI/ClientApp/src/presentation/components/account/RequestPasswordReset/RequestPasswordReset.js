@@ -9,19 +9,19 @@ import { FormButton } from '../../../../application/common/FormButton/FormButton
 
 const Header = styled.h3`
     align-self: center;
-    color: grey;
+    color: white;
 `
 
 const ErrorDisplay = styled.div`
     margin-top: 5px;
     font-size: 10px;
-    color: grey;
+    color: white;
 `
 
 const Text = styled.p`
     margin-top: 5px;
     font-size: 16px;
-    color: grey;
+    color: white;
 `
 
 

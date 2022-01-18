@@ -19,8 +19,6 @@ namespace Infrastructure.Persistence.Configurations
                 .WithMany(c => c.PsychologistAppointments)
                 .HasForeignKey(c => c.PsychologistId)
                 .HasPrincipalKey(a => a.Id);
-
-
         }
     }
 }

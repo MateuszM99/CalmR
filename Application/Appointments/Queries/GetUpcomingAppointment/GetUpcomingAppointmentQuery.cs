@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Exceptions;
@@ -42,7 +43,11 @@ namespace Application.Appointments.Queries.GetUpcomingAppointment
             }
 
             var upcomingAppointment = await _context.Appointments
-                                            .Where(a => a.ClientId == user.Id || a.PsychologistId == user.Id)
+                                            .Where(a => (a.ClientId == user.Id || a.PsychologistId == user.Id) && a.StartDate.AddHours(a.DurationTime) >= DateTime.Now)
+                                            .Include(a => a.Psychologist)
+                                            .ThenInclude(u => u.Psychologist)
+                                            .ThenInclude(p => p.Address)
+                                            .Include(a => a.Client)
                                             .OrderByDescending(a => a.StartDate)
                                             .FirstOrDefaultAsync(cancellationToken);
             

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Application.Appointments.Commands.CancelAppointment;
+using Application.Appointments.Commands;
+using Application.Appointments.Commands.ConfirmAppointment;
 using Application.Appointments.Commands.CreateAppointment;
+using Application.Appointments.Commands.EndAppointment;
+using Application.Appointments.Commands.RejectAppointment;
 using Application.Appointments.Commands.UpdateAppointment;
 using Application.Appointments.Queries;
 using Application.Appointments.Queries.GetAvailableHours;
@@ -42,7 +45,7 @@ namespace CalmR.Controllers
         
         [Route("cancel-appointment")]
         [HttpPost]
-        public async Task<CancelAppointmentResponse> CancelAppointment([FromBody] CancelAppointmentCommand command)
+        public async Task<AppointmentStatusChangeResponse> CancelAppointment([FromBody] CancelAppointmentCommand command)
         {
             var response = await Mediator.Send(command);
             
@@ -52,6 +55,33 @@ namespace CalmR.Controllers
         [Route("update-appointment")]
         [HttpPost]
         public async Task<int> UpdateAppointment([FromBody] UpdateAppointmentCommand command)
+        {
+            var response = await Mediator.Send(command);
+            
+            return response;
+        }
+
+        [Route("confirm-appointment")]
+        [HttpPost]
+        public async Task<AppointmentStatusChangeResponse> ConfirmAppointment([FromBody] ConfirmAppointmentCommand command)
+        {
+            var response = await Mediator.Send(command);
+            
+            return response;
+        }
+        
+        [Route("reject-appointment")]
+        [HttpPost]
+        public async Task<AppointmentStatusChangeResponse> RejectAppointment([FromBody] RejectAppointmentCommand command)
+        {
+            var response = await Mediator.Send(command);
+            
+            return response;
+        }
+        
+        [Route("end-appointment")]
+        [HttpPost]
+        public async Task<AppointmentStatusChangeResponse> EndAppointment([FromBody] EndAppointmentCommand command)
         {
             var response = await Mediator.Send(command);
             

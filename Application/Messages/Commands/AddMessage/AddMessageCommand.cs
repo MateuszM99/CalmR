@@ -16,6 +16,8 @@ namespace Application.Messages.Commands
     public class AddMessageCommand : IRequest<MessageDTO>
     {
         public int ConversationId { get; set; }
+        public long? FileId { get; set; }
+        public string Filename { get; set; }
         public string Content { get; set; }
     }
     
@@ -49,6 +51,7 @@ namespace Application.Messages.Commands
                 Content = request.Content,
                 CreatedAt = DateTime.Now,
                 SenderId = user.Id,
+                FileId = request.FileId,
                 ConversationId = request.ConversationId
             };
 

@@ -17,6 +17,7 @@ namespace Infrastructure.Persistence
         public DbSet<Message> Messages { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<Participant> Participants { get; set; }
+        public DbSet<File> Files { get; set; }
 
 
         public ApplicationDbContext(

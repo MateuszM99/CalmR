@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useHistory, useLocation } from 'react-router';
 import styled from "styled-components";
 import SearchIcon from '@mui/icons-material/Search';
-import { Button } from '@mui/material';
+import { Button} from '@mui/material';
 import { createConversationRequest, getUserPsychologistConversationRequest } from '../../../../infrastructure/services/api/conversations/ConversationsRequests';
 import { getPsychologistsListRequest } from '../../../../infrastructure/services/api/psychologists/PsychologistsRequests';
 import AppointmentDialogForm from '../AppointmentForm/AppointmentDialogForm';
@@ -11,6 +11,7 @@ import PlaceIcon from '@mui/icons-material/Place';
 import { FormButton } from '../../../../application/common/FormButton/FormButton';
 import useQueryString from "../../../../application/hooks/useQueryString";
 import Pagination from '@mui/material/Pagination';
+import { makeStyles } from '@material-ui/core';
 
 const Container = styled.div`
     margin-top: 2rem;
@@ -21,14 +22,13 @@ const Container = styled.div`
     justify-content: center;
 `
 
-const SearchBar = styled.div`
+export const SearchBar = styled.div`
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: center;
-    border-radius: 5px;
-    width: 400px;
-    input {
+    width: 422px;
+    font-family: "Poppins", sans-serif;
+    .search-box {
         height: 42px;
         width: 368px;
         border: none;
@@ -37,17 +37,19 @@ const SearchBar = styled.div`
         padding: 0 60px 0 20px;
         font-size: 16px;
         color: grey;
+        border-radius: 5px 0px 0px 5px;
     }
 
     .search-icon {
-        background-color: #1325C8;
-        width: 42px;
+        background: #3232C1;
+        width: 64px;
         height: 42px;
         cursor: pointer;
         color: white;
         display: flex;
         align-items: center;
         justify-content: center;
+        border-radius: 0px 5px 5px 0px;
     }
 `
 
@@ -57,14 +59,16 @@ const ListContainer = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    font-family: "Poppins", sans-serif;
 `
 const ListItem = styled.div`
     margin-top: 1rem;
-    height: 450px;
+    height: 480px;
     width: 600px;
+    background: white;
     border-radius: 5px;
     box-shadow: 1px 1px 3px rgba(0,0,0,.2);
-    padding: 15px;
+    padding: 30px;
 
     span {
         margin-bottom: 5px;
@@ -79,7 +83,7 @@ const ListItem = styled.div`
     }
 
     .description {
-        padding-top: 15px;
+        padding-top: 50px;
         height: 125px;
         font-size: 13px;
         color: grey;
@@ -103,21 +107,30 @@ const ListItem = styled.div`
         display: flex;
         flex-direction: row;
         align-items: center;
-        height: 42px;
+        height: 36px;
         p {
             padding: 0;
             margin: 0;
             margin-left: 10px;
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 500;
             color: grey;
         }
     }
 `
 
+const useStyles = makeStyles(() => ({
+    ul: {
+      "& .MuiPaginationItem-root": {
+        color : 'white'
+      }
+    }
+  }));
+
 
 
 function UserPsychologist() {
+    const classes = useStyles();
     const history = useHistory();
     const [totalPages, setTotalPages] = useState(0);
     const [currentPageIndex, onSetCurrentPageIndex] = useQueryString("pageIndex", 1);
@@ -138,13 +151,10 @@ function UserPsychologist() {
     };
 
     const handleSendMessageClick = async (psychologistId) => {
-        console.log(psychologistId);
         try{
-            console.log(psychologistId);
             let conversationId = null;
             let response = await getUserPsychologistConversationRequest(psychologistId);
-
-            console.log(response.data);
+            
             conversationId = response.data?.id;
 
             if(!response.data){
@@ -188,7 +198,7 @@ function UserPsychologist() {
         <div>
             <Container>
                 <SearchBar>
-                    <input type="text" placeholder="Type to search.." onChange={handleTextSearchChange}/>
+                    <input className='search-box' type="text" placeholder="Type to search ..." onChange={handleTextSearchChange}/>
                     <div className="search-icon" onClick={() => getPsychologistList(currentPageIndex, textSearch)}>
                         <SearchIcon fontSize="medium"/>
                     </div>
@@ -202,7 +212,7 @@ function UserPsychologist() {
                                 <h6>Psycholog</h6>
                             </span>
                             <div className="description">
-                                <p>{psychologist.description}</p>
+                                <p>"{psychologist.description}"</p>
                             </div>
                             <span className="actions">
                                 <FormButton width="200px" height="42px" fontSize="12px" onClick={() => handleClickOpen(psychologist)}>Make appointment</FormButton>
@@ -215,12 +225,12 @@ function UserPsychologist() {
                             </span>
                             <span className="info">
                                 <PaidIcon fontSize="medium"/>
-                                <p>Online consultation &bull; {psychologist.costPerHour}$ (per hour)</p>
+                                <p>Online consultation &bull; {psychologist.costPerHour}$</p>
                             </span>
                         </ListItem>
                     ))}
                 </ListContainer>
-                <Pagination count={totalPages} color="primary" defaultPage={1} page={currentPageIndex} onChange={handlePageChange} style={{margin:"30px 0px"}}/>
+                <Pagination count={totalPages} classes={{ul: classes.ul}} defaultPage={1} page={currentPageIndex} onChange={handlePageChange} style={{margin:"30px 0px"}}/>
             </Container>
             <AppointmentDialogForm
                 psychologist = {selectedPsychologist}

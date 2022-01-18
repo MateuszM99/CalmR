@@ -8,14 +8,14 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Appointments.Commands.CancelAppointment
+namespace Application.Appointments.Commands
 {
-    public class CancelAppointmentCommand : IRequest<CancelAppointmentResponse>
+    public class CancelAppointmentCommand : IRequest<AppointmentStatusChangeResponse>
     {
         public int AppointmentId { get; set; }
     }
 
-    public class CommandHandler : IRequestHandler<CancelAppointmentCommand,CancelAppointmentResponse>
+    public class CommandHandler : IRequestHandler<CancelAppointmentCommand,AppointmentStatusChangeResponse>
     {
         private readonly IApplicationDbContext _context;
 
@@ -25,7 +25,7 @@ namespace Application.Appointments.Commands.CancelAppointment
         }
 
 
-        public async Task<CancelAppointmentResponse> Handle(CancelAppointmentCommand request, CancellationToken cancellationToken)
+        public async Task<AppointmentStatusChangeResponse> Handle(CancelAppointmentCommand request, CancellationToken cancellationToken)
         {
             var appointment = await _context.Appointments.FirstOrDefaultAsync(x => x.Id == request.AppointmentId, cancellationToken);
 
@@ -49,7 +49,7 @@ namespace Application.Appointments.Commands.CancelAppointment
             appointment.Status = AppointmentStatus.Cancelled;
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new CancelAppointmentResponse()
+            return new AppointmentStatusChangeResponse()
             {
                 IsSuccessful = true,
                 Message = "Canceled appointment"

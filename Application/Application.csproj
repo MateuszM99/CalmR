@@ -8,7 +8,6 @@
       <Folder Include="Common\Security" />
       <Folder Include="Conversations\Commands\DeleteConversationCommand" />
       <Folder Include="Participants\Commands" />
-      <Folder Include="Psychologists\Commands" />
     </ItemGroup>
 
     <ItemGroup>

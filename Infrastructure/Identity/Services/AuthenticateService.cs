@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
@@ -49,6 +50,8 @@ namespace Infrastructure.Identity.Services
             {
                 UserName = request.UserName,
                 Email =  request.Email,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
                 PsychologistId = request.PsychologistId,
             };
 
@@ -56,6 +59,13 @@ namespace Infrastructure.Identity.Services
             if (!result.Succeeded)
             {
                 throw new ApiException(string.Join(Environment.NewLine, result.Errors.Select(err => $"{err.Code}: {err.Description}")), "500");
+            }
+
+            if (request.PsychologistId != null)
+            {
+                var psychologistToUpdate = await _context.Psychologists.FindAsync(request.PsychologistId);
+                psychologistToUpdate.UserId = user.Id;
+                await _context.SaveChangesAsync(new CancellationToken());
             }
 
             await SendConfirmationEmail(user, origin);

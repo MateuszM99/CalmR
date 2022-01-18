@@ -14,6 +14,8 @@ namespace Application.Messages.Queries
         public MessageStatus Status { get; set; }
         public string Content { get; set; }
         public DateTime CreatedAt { get; set; }
+        public long? FileId { get; set; }
+        public string FileName { get; set; }
         public bool SentByMe { get; set; }
     }
 }

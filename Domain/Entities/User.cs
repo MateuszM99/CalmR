@@ -6,6 +6,8 @@ namespace Domain.Entities
 {
     public class User : IdentityUser
     {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public int? PsychologistId { get; set; }
         public virtual Psychologist Psychologist { get; set; }
         public bool IsEnabled { get; set; }

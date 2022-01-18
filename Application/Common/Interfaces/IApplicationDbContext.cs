@@ -14,6 +14,7 @@ namespace Application.Common.Interfaces
         public DbSet<Message> Messages { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<Participant> Participants { get; set; }
+        public DbSet<File> Files { get; set; }
         
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

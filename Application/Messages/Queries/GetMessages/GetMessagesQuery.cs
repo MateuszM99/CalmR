@@ -51,7 +51,7 @@ namespace Application.Messages.Queries
                 throw new ApiException("Cannot load this conversation", StatusCodes.Status405MethodNotAllowed.ToString());
             }
             
-            var query = _context.Messages.Include(m => m.Sender).AsQueryable();
+            var query = _context.Messages.Include(m => m.Sender).Include(f => f.File).AsQueryable();
 
             query = ApplyFilter(query, request);
 

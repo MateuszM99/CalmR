@@ -35,7 +35,7 @@ namespace Application.Psychologists.Queries
 
         public async Task<PagedResult<PsychologistDTO>> Handle(GetPsychologistsQuery request, CancellationToken cancellationToken)
         {
-            var psychologists = _context.Psychologists.Include(p => p.User).AsQueryable();
+            var psychologists = _context.Psychologists.Include(p => p.User).Include(a => a.Address).AsQueryable();
 
             psychologists = ApplyFilter(psychologists, request);
             psychologists = ApplyPaging(psychologists, request.pageDto);

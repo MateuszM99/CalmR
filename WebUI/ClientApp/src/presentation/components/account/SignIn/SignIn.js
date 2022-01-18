@@ -12,7 +12,7 @@ import { RedirectLink } from '../../../../application/common/RedirectLink/Redire
 
 const Header = styled.h5`
     align-self: center;
-    color: grey;
+    color: white;
 `
 
 const ErrorDisplay = styled.div`
@@ -21,7 +21,7 @@ const ErrorDisplay = styled.div`
     margin-top: 5px;
     margin-bottom: 20px;
     font-size: 10px;
-    color: grey;
+    color: white;
 `
 
 
